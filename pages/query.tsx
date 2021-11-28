@@ -17,8 +17,10 @@ const QueryPage = () => {
   };
 
   const getCard = async (id: string) => {
-    const card = await apiService.getCard(id);
-    setCards((c) => { return { ...c, [id]: card }; });
+    if (!cards[id]) {
+      const card = await apiService.getCard(id);
+      setCards((c) => { return { ...c, [id]: card }; });
+    }
   };
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const QueryPage = () => {
         <FontSelect />
       </div>
       <div className="query-body">
-        <SearchResults results={results} setSelected={setSelectedCard} />
+        <SearchResults results={results} setSelected={setSelectedCard} cards={cards} getCard={getCard} />
         <CardDetail card={cards[selectedCard]} />
       </div>
     </div>
