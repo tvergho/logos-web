@@ -9,6 +9,17 @@ type CardProps = {
 }
 
 const CardDetail = ({ card }: CardProps) => {
+  const citeObj: Record<string, string> = {};
+
+  if (card?.cite_emphasis) {
+    for (const [start, end] of card.cite_emphasis) {
+      citeObj[start] = `${citeObj[start] || ''}<span style="font-size:13pt;font-weight:bold;">`;
+      citeObj[end] = `${citeObj[end] || ''}</span>`;
+    }
+  }
+
+  const styledCite = card?.cite.replace(/(?:)/g, (_, index) => citeObj[index] || '');
+
   return (
     <div className={styles.card}>
       {!!card && (
@@ -18,8 +29,8 @@ const CardDetail = ({ card }: CardProps) => {
             style={{
               fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
             }}
-          >{card.cite}
-          </p>
+            dangerouslySetInnerHTML={{ __html: styledCite || '' }}
+          />
           {card.body.map((paragraph, i) => {
             const highlights = card.highlights.filter((h) => h[0] === i + 2);
             const underlines = card.underlines.filter((u) => u[0] === i + 2);

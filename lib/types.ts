@@ -17,5 +17,6 @@ export type Card = {
   body: [string],
   emphasis: [[number, number, number]],
   highlights: [[number, number, number]],
-  underlines: [[number, number, number]]
+  underlines: [[number, number, number]],
+  cite_emphasis?: [[number, number, number]],
 }
