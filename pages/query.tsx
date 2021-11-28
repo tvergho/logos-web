@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { InputBox } from '../components/query';
+import { InputBox, SearchResults, CardDetail } from '../components/query';
 import * as apiService from '../services/api';
 
 const QueryPage = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const [cards, setCards] = useState({});
+  const [cards, setCards] = useState<Record<string, any>>({});
+  const [selectedCard, setSelectedCard] = useState(undefined);
 
   const search = async () => {
     if (query.length > 0) {
@@ -29,6 +30,10 @@ const QueryPage = () => {
   return (
     <div className="query-page">
       <InputBox value={query} onChange={setQuery} onSearch={search} />
+      <div className="query-body">
+        <SearchResults results={results} setSelected={(id) => setSelectedCard(cards[id])} />
+        <CardDetail card={selectedCard} />
+      </div>
     </div>
   );
 };
