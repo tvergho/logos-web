@@ -25,7 +25,11 @@ const CardDetail = ({ card }: CardProps) => {
     <div className={styles.card}>
       {!!card && (
         <>
-          <h4 style={{ fontSize: '13pt', marginTop: 2, marginBottom: 0 }}>{card.tag}</h4>
+          <h4 style={{
+            fontSize: '13pt', marginTop: 2, marginBottom: 0, lineHeight: 1.08,
+          }}
+          >{card.tag}
+          </h4>
           <p className="MsoNormal"
             style={{
               fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
