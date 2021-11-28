@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { InputBox, SearchResults, CardDetail } from '../components/query';
+import FontSelect from '../components/FontSelect';
 import * as apiService from '../services/api';
 
 const QueryPage = () => {
@@ -29,7 +30,10 @@ const QueryPage = () => {
 
   return (
     <div className="query-page">
-      <InputBox value={query} onChange={setQuery} onSearch={search} />
+      <div className="query-body">
+        <InputBox value={query} onChange={setQuery} onSearch={search} />
+        <FontSelect />
+      </div>
       <div className="query-body">
         <SearchResults results={results} setSelected={(id) => setSelectedCard(cards[id])} />
         <CardDetail card={selectedCard} />
