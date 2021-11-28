@@ -5,6 +5,7 @@ export type SearchResult = {
   s3_url?: string;
   tag: string;
   year?: string;
+  download_url?: string;
 }
 
 export type Card = {
@@ -18,5 +19,6 @@ export type Card = {
   emphasis: [[number, number, number]],
   highlights: [[number, number, number]],
   underlines: [[number, number, number]],
-  cite_emphasis?: [[number, number, number]],
+  cite_emphasis?: [[number, number]],
+  download_url?: string;
 }

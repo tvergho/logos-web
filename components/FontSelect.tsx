@@ -16,7 +16,7 @@ const FontSelect = () => {
   }, [selectedFont]);
 
   return (
-    <select defaultValue="Calibri" value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
+    <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
       {fonts.map((font) => (
         <option value={font} key={font}>{font}</option>
       ))}

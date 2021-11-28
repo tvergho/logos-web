@@ -2,6 +2,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
 import type { Card } from '../../lib/types';
+import { generateStyledCite } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
 import styles from './styles.module.scss';
 
@@ -10,16 +11,7 @@ type CardProps = {
 }
 
 const CardDetail = ({ card }: CardProps) => {
-  const citeObj: Record<string, string> = {};
-
-  if (card?.cite_emphasis) {
-    for (const [start, end] of card.cite_emphasis) {
-      citeObj[start] = `${citeObj[start] || ''}<span style="font-size:13pt;font-weight:bold;">`;
-      citeObj[end] = `${citeObj[end] || ''}</span>`;
-    }
-  }
-
-  const styledCite = card?.cite.replace(/(?:)/g, (_, index) => citeObj[index] || '');
+  const styledCite = generateStyledCite(card?.cite, card?.cite_emphasis);
 
   return (
     <div className={styles.card}>
@@ -62,12 +54,9 @@ const CardDetail = ({ card }: CardProps) => {
             );
           })}
 
-          {card.s3_url
-          && (
-            <div className={styles.download}>
-              <DownloadLink url={card.s3_url} />
-            </div>
-          )}
+          <div className={styles.download}>
+            <DownloadLink url={card.download_url || card.s3_url} />
+          </div>
         </>
       )}
     </div>

@@ -25,7 +25,7 @@ const SearchResults = ({ results, setSelected }: SearchResultsProps) => {
         <div key={result.id} className={styles.result} role="button" tabIndex={0} onClick={() => setSelected(result.id)}>
           <div className={styles.tag}>{result.tag}</div>
           <div className={styles.cite}>{result.cite}</div>
-          {result.s3_url && <DownloadLink url={result.s3_url} />}
+          <DownloadLink url={result.s3_url || result.download_url} />
         </div>
       ))}
     </div>
