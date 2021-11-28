@@ -1,10 +1,16 @@
 import styles from './styles.module.scss';
 
-const InputBox = () => {
+type InputBoxProps = {
+  onChange: (value: string) => void;
+  value: string;
+  onSearch: () => void;
+};
+
+const InputBox = ({ value, onChange, onSearch }: InputBoxProps) => {
   return (
     <div>
-      <input type="text" placeholder="Search" className={styles.search} />
-      <button className={styles.button} type="button">Submit</button>
+      <input type="text" placeholder="Search" className={styles.search} value={value} onChange={(e) => { onChange(e.target.value); }} />
+      <button className={styles.button} type="button" onClick={onSearch}>Submit</button>
     </div>
   );
 };
