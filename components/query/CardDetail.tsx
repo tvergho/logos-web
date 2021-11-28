@@ -39,7 +39,7 @@ const CardDetail = ({ card }: CardProps) => {
 
             const obj: Record<string, string> = {};
             for (const [_, s, e] of highlights) {
-              obj[s] = `${obj[s] || ''}<span style="background:aqua;">`;
+              obj[s] = `${obj[s] || ''}<span style="background:yellow;">`;
               obj[e] = `${obj[e] || ''}</span>`;
             }
             for (const [_, s, e] of emphases) {
