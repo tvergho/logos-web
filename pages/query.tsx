@@ -7,7 +7,7 @@ const QueryPage = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [cards, setCards] = useState<Record<string, any>>({});
-  const [selectedCard, setSelectedCard] = useState(undefined);
+  const [selectedCard, setSelectedCard] = useState('');
 
   const search = async () => {
     if (query.length > 0) {
@@ -16,17 +16,16 @@ const QueryPage = () => {
     }
   };
 
-  const getCards = async () => {
-    await Promise.all(results.map(async (result) => {
-      const { id } = result;
-      const card = await apiService.getCard(id);
-      setCards((c) => { return { ...c, [id]: card }; });
-    }));
+  const getCard = async (id: string) => {
+    const card = await apiService.getCard(id);
+    setCards((c) => { return { ...c, [id]: card }; });
   };
 
   useEffect(() => {
-    getCards();
-  }, [results]);
+    if (selectedCard) {
+      getCard(selectedCard);
+    }
+  }, [selectedCard]);
 
   return (
     <div className="query-page">
@@ -35,8 +34,8 @@ const QueryPage = () => {
         <FontSelect />
       </div>
       <div className="query-body">
-        <SearchResults results={results} setSelected={(id) => setSelectedCard(cards[id])} />
-        <CardDetail card={selectedCard} />
+        <SearchResults results={results} setSelected={setSelectedCard} />
+        <CardDetail card={cards[selectedCard]} />
       </div>
     </div>
   );

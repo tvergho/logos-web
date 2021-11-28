@@ -2,6 +2,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
 import type { Card } from '../../lib/types';
+import DownloadLink from '../DownloadLink';
 import styles from './styles.module.scss';
 
 type CardProps = {
@@ -56,6 +57,13 @@ const CardDetail = ({ card }: CardProps) => {
               <p className="MsoNormal" style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }} key={i} dangerouslySetInnerHTML={{ __html: styledParagraph }} />
             );
           })}
+
+          {card.s3_url
+          && (
+            <div className={styles.download}>
+              <DownloadLink url={card.s3_url} />
+            </div>
+          )}
         </>
       )}
     </div>
