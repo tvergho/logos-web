@@ -15,7 +15,7 @@ export type Card = {
   s3_url?: string;
   year?: string;
   body: [string],
-  emphasis: [[number]],
-  highlights: [[number]],
-  underlines: [[number]]
+  emphasis: [[number, number, number]],
+  highlights: [[number, number, number]],
+  underlines: [[number, number, number]]
 }
