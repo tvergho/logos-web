@@ -1,3 +1,78 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+      "browser": true,
+      "es6": true,
+      "jest": true
+  },
+  "rules": {
+      "strict": 0,
+      "quotes": [2, "single"],
+      "indent": ["error", 2],
+      "no-else-return": 0,
+      "new-cap": ["error", {"capIsNewExceptions": ["Router"]}],
+      "no-console": 0,
+      "import/no-unresolved": [2, { "caseSensitive": false, "ignore": ["^(all|part):"] } ],
+      "no-unused-vars": ["off", { "vars": "all", "args": "none" }],
+      "no-use-before-define":"warn",
+      "no-underscore-dangle": 0,
+      "arrow-body-style": 0,
+      "one-var": ["error", { "uninitialized": "always", "initialized": "never" }],
+      "one-var-declaration-per-line": ["error", "initializations"],
+      "max-len": ["error", 200],
+      "no-extra-parens": 0,
+      "no-restricted-syntax": [
+        0,
+        "DebuggerStatement"
+      ],
+      "no-debugger": "warn",
+      "react/jsx-uses-react": 2,
+      "react/jsx-uses-vars": 2,
+      "react/prop-types": 0,
+      "react/destructuring-assignment": 0,
+      "react/jsx-first-prop-new-line": 0,
+      "react/jsx-filename-extension": 0,
+      "jsx-a11y/click-events-have-key-events": 0,
+      "jsx-a11y/no-noninteractive-element-interactions": 0,
+      "react/jsx-one-expression-per-line":0,
+      "react/require-default-props":0,
+      "react/forbid-prop-types":0,
+      "react/jsx-props-no-spreading": [0],
+      "import/no-cycle": 0,
+      "global-require": 0,
+      "import/prefer-default-export": 0,
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/interface-name-prefix": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-ignore": "off",
+      "react/react-in-jsx-scope": "off",
+      "import/extensions": 0,
+      "no-shadow": 0,
+      "camelcase": 0,
+      "react/function-component-definition": 0
+  },
+  "plugins": [
+      "react",
+      "@typescript-eslint",
+      "import"
+  ],
+  "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true,
+        "sourceType": "module"
+      }
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
 }
