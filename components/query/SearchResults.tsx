@@ -1,7 +1,9 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { useState } from 'react';
 import type { SearchResult } from '../../lib/types';
+import { generateStyledCite } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
 import styles from './styles.module.scss';
 
@@ -39,9 +41,12 @@ const SearchResults = ({
         return (
           <div key={result.id} className={styles.result} role="button" tabIndex={0} onClick={() => setSelected(result.id)}>
             <div className={styles.tag}>{/\d/.test(result.cite) ? result.tag : `${result.tag} ${result.cite}`}</div>
-            <div className={styles.cite}>{/\d/.test(result.cite) ? result.cite
-              : (card ? card.body.find((p: string) => /\d/.test(p)) : '')}
-            </div>
+            <div className={styles.cite}
+              dangerouslySetInnerHTML={{
+                __html: (/\d/.test(result.cite) ? generateStyledCite(result.cite, result.cite_emphasis, 11)
+                  : (card ? card.body.find((p: string) => /\d/.test(p)) : '')),
+              }}
+            />
             <DownloadLink url={result.s3_url || result.download_url} />
           </div>
         );

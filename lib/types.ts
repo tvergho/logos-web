@@ -6,6 +6,7 @@ export type SearchResult = {
   tag: string;
   year?: string;
   download_url?: string;
+  cite_emphasis?: [[number, number]];
 }
 
 export type Card = {
