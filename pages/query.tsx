@@ -1,4 +1,4 @@
-import { useState, useEffect, UIEventHandler } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { InputBox, SearchResults, CardDetail } from '../components/query';
@@ -40,19 +40,14 @@ const QueryPage = () => {
     }
   };
 
-  const onScroll: UIEventHandler<HTMLDivElement> = (e) => {
-    const target = e.target as HTMLElement;
-    const { scrollTop, scrollHeight, clientHeight } = target;
-
-    if (scrollHeight - scrollTop - clientHeight < 70) {
-      searchRequest(query, scrollCursor);
-    }
+  const loadMore = async () => {
+    searchRequest(query, scrollCursor);
   };
 
   useEffect(() => {
-    if (urlSearch && urlSearch.length > 0 && typeof urlSearch === 'string') {
-      setQuery(decodeURI(urlSearch));
-      searchRequest(decodeURI(urlSearch), 0, true);
+    if (urlSearch && urlSearch.length > 0) {
+      setQuery(decodeURI(urlSearch as string));
+      searchRequest(decodeURI(urlSearch as string), 0, true);
     }
   }, [urlSearch]);
 
@@ -87,7 +82,7 @@ const QueryPage = () => {
           setSelected={setSelectedCard}
           cards={cards}
           getCard={getCard}
-          onScroll={onScroll}
+          loadMore={loadMore}
         />
         <CardDetail card={cards[selectedCard]} />
       </div>
