@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
+import { useRef } from 'react';
+import { FaCopy } from 'react-icons/fa';
 import type { Card } from '../../lib/types';
-import { generateStyledCite } from '../../lib/utils';
+import { generateStyledCite, generateStyledParagraph } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
 import styles from './styles.module.scss';
 
@@ -12,48 +15,57 @@ type CardProps = {
 
 const CardDetail = ({ card }: CardProps) => {
   const styledCite = generateStyledCite(card?.cite, card?.cite_emphasis);
+  const container = useRef<HTMLDivElement>(null);
+
+  const copy = () => {
+    if (container.current) {
+      window.getSelection()?.removeAllRanges();
+
+      const range = document.createRange();
+      range.selectNode(container.current);
+      window.getSelection()?.addRange(range);
+
+      document.execCommand('copy');
+      window.getSelection()?.removeAllRanges();
+    }
+  };
 
   return (
     <div className={styles.card}>
       {!!card && (
         <>
-          <h4 style={{
-            fontSize: '13pt', marginTop: 2, marginBottom: 0, lineHeight: 1.08,
-          }}
-          >{card.tag}
-          </h4>
-          <p className="MsoNormal"
-            style={{
-              fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
-            }}
-            dangerouslySetInnerHTML={{ __html: styledCite || '' }}
-          />
-          {card.body.map((paragraph, i) => {
-            const highlights = card.highlights.filter((h) => h[0] === i + 2);
-            const underlines = card.underlines.filter((u) => u[0] === i + 2);
-            const emphases = card.emphasis.filter((u) => u[0] === i + 2);
+          <div ref={container}>
+            <div className={styles['copy-container']}>
+              <h4 style={{
+                fontSize: '13pt', marginTop: 2, marginBottom: 0, lineHeight: '15.6933px',
+              }}
+              >{card.tag}
+              </h4>
+              <button
+                className={styles.copy}
+                type="button"
+                onClick={copy}
+              ><FaCopy color="rgba(0,0,0,0.4)" size={20} />
+              </button>
+            </div>
+            <p className="MsoNormal"
+              style={{
+                fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
+              }}
+              dangerouslySetInnerHTML={{ __html: styledCite || '' }}
+            />
+            {card.body.map((paragraph, i) => {
+              const styledParagraph = generateStyledParagraph(card, i, paragraph, 'yellow');
 
-            const obj: Record<string, string> = {};
-            for (const [_, s, e] of highlights) {
-              obj[s] = `${obj[s] || ''}<span style="background:yellow;">`;
-              obj[e] = `${obj[e] || ''}</span>`;
-            }
-            for (const [_, s, e] of emphases) {
-              obj[s] = `${obj[s] || ''}<b><u>`;
-              obj[e] = `${obj[e] || ''}</u></b>`;
-            }
-            for (const [_, s, e] of underlines) {
-              obj[s] = `${obj[s] || ''}<u>`;
-              obj[e] = `${obj[e] || ''}</u>`;
-            }
-
-            const styledParagraph = paragraph.replace(/(?:)/g, (_, index) => obj[index] || '');
-
-            return (
-              <p className="MsoNormal" style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }} key={i} dangerouslySetInnerHTML={{ __html: styledParagraph }} />
-            );
-          })}
-
+              return (
+                <p className="MsoNormal"
+                  style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }}
+                  key={i}
+                  dangerouslySetInnerHTML={{ __html: styledParagraph }}
+                />
+              );
+            })}
+          </div>
           <div className={styles.download}>
             <DownloadLink url={card.download_url || card.s3_url} />
           </div>

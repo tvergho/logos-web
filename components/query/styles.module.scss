@@ -96,3 +96,25 @@
   justify-content: flex-start;
   align-items: flex-start;
 }
+
+.copy-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.copy {
+  outline: 0;
+  background-color: transparent;
+  border: 0;
+  margin-left: 5px;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 0.5;
+  }
+}
