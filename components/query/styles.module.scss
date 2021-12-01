@@ -42,20 +42,38 @@
 
 .loading {
   height: 30px;
-  margin-bottom: 10px;
 }
 
 .results {
   width: 35%;
   min-width: 35%;
+  max-height: calc(100vh - 220px);
+  overflow-y: scroll;
+  padding-bottom: 50px;
 }
 
 .result {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  transition: 0.3s all;
+  background-color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: -10px;
+
+  &:hover {
+    background-color: rgba(235,235,235);
+  }
+  &:active {
+    background-color: rgba(225,225,225);
+  }
 }
 
 .card {
   margin-left: 20px;
+  max-height: calc(100vh - 220px);
+  overflow-y: scroll;
+  padding-bottom: 50px;
 }
 
 .tag {
