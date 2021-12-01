@@ -1,10 +1,13 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { useState, useRef } from 'react';
+import {
+  useState, useRef, useEffect, useMemo,
+} from 'react';
 import {
   InfiniteLoader, AutoSizer, List, CellMeasurerCache, ListRowRenderer, CellMeasurer,
 } from 'react-virtualized';
+import useWindowSize from '../../lib/useWindowSize';
 import type { SearchResult } from '../../lib/types';
 import { generateStyledCite } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
@@ -16,25 +19,42 @@ type SearchResultsProps = {
   results: Array<SearchResult>;
   setSelected: (id: string) => void;
   cards: Record<string, any>;
-  getCard: (id: string) => void;
+  getCard: (id: string) => Promise<void>;
   loadMore: () => Promise<any>;
 };
 
 const SearchResults = ({
   results, setSelected, cards, getCard, loadMore,
 }: SearchResultsProps) => {
+  const { width } = useWindowSize();
   const cache = useRef(new CellMeasurerCache({
     fixedWidth: true,
-    defaultHeight: 100,
+    defaultWidth: width * 0.35,
+    defaultHeight: 80,
   }));
+  const loader = useRef<InfiniteLoader>(null);
   const [requested, setRequested] = useState<Record<string, any>>({});
-  const filteredResults = results.reduce<Array<SearchResult>>((acc, result) => {
-    const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.8; });
-    if (!hasSimilarMatch) {
-      return [...acc, result];
+
+  const filteredResults = useMemo<Array<SearchResult>>(() => {
+    return results.reduce<Array<SearchResult>>((acc, result) => {
+      const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.8; });
+      if (!hasSimilarMatch) {
+        return [...acc, result];
+      }
+      return acc;
+    }, []);
+  }, [results]);
+
+  useEffect(() => {
+    if (loader.current) {
+      loader.current.resetLoadMoreRowsCache();
     }
-    return acc;
-  }, []);
+  }, [cards]);
+
+  useEffect(() => {
+    loader.current?.resetLoadMoreRowsCache();
+    cache.current.clearAll();
+  }, [results[0], width]);
 
   const rowRenderer: ListRowRenderer = ({
     index, parent, key, style,
@@ -42,7 +62,9 @@ const SearchResults = ({
     const result = filteredResults[index];
 
     if (!cards[result.id] && !/\d/.test(result.cite) && !requested[result.id]) {
-      getCard(result.id);
+      getCard(result.id).then(() => {
+        cache.current.clear(index, 0);
+      });
       setRequested((prev) => ({ ...prev, [result.id]: true }));
     }
 
@@ -72,7 +94,13 @@ const SearchResults = ({
 
   return (
     <div className={styles.results}>
-      <InfiniteLoader isRowLoaded={(i) => !!filteredResults[i.index]} loadMoreRows={loadMore} rowCount={10000000}>
+      <InfiniteLoader
+        isRowLoaded={(i) => !!filteredResults[i.index]}
+        loadMoreRows={loadMore}
+        rowCount={10000000}
+        ref={loader}
+        threshold={10}
+      >
         {({ onRowsRendered, registerChild }) => (
           <AutoSizer>
             {({ width, height }) => (

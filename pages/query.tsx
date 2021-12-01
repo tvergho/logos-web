@@ -41,7 +41,9 @@ const QueryPage = () => {
   };
 
   const loadMore = async () => {
-    searchRequest(query, scrollCursor);
+    if (urlSearch && urlSearch.length > 0) {
+      searchRequest(decodeURI(urlSearch as string), scrollCursor);
+    }
   };
 
   useEffect(() => {
