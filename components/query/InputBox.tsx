@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import '@dotlottie/player-component';
+import { useEffect } from 'react';
 import styles from './styles.module.scss';
 
 type InputBoxProps = {
@@ -27,6 +27,10 @@ const InputBox = ({
     }
   };
 
+  useEffect(() => {
+    require('@dotlottie/player-component');
+  }, []);
+
   return (
     <div className={styles['input-container']}>
       <div>
@@ -42,7 +46,7 @@ const InputBox = ({
       </div>
 
       <div className={styles.loading}>
-        {loading && (
+        {loading && typeof window !== 'undefined' && (
           <dotlottie-player
             src="https://assets10.lottiefiles.com/dotlotties/dlf10_ikmyszsb.lottie"
             background="transparent"

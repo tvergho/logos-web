@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { InputBox, SearchResults, CardDetail } from '../components/query';
 import * as apiService from '../services/api';
 
@@ -9,15 +10,28 @@ const QueryPage = () => {
   const [cards, setCards] = useState<Record<string, any>>({});
   const [selectedCard, setSelectedCard] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { query: { search: urlSearch } } = router;
 
   const search = async () => {
-    if (query.length > 0) {
-      setLoading(true);
-      const response = await apiService.search(query);
-      setResults(response);
-      setLoading(false);
-    }
+    router.push({
+      pathname: '/query',
+      query: {
+        search: encodeURI(query),
+      },
+    });
   };
+
+  useEffect(() => {
+    if (urlSearch && urlSearch.length > 0 && typeof urlSearch === 'string') {
+      setQuery(decodeURI(urlSearch));
+      setLoading(true);
+      apiService.search(urlSearch).then((response) => {
+        setResults(response);
+        setLoading(false);
+      });
+    }
+  }, [urlSearch]);
 
   const getCard = async (id: string) => {
     if (!cards[id]) {
