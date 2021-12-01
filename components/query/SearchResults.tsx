@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { useState } from 'react';
+import { UIEventHandler, useState } from 'react';
 import type { SearchResult } from '../../lib/types';
 import { generateStyledCite } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
@@ -14,10 +14,11 @@ type SearchResultsProps = {
   setSelected: (id: string) => void;
   cards: Record<string, any>;
   getCard: (id: string) => void;
+  onScroll: UIEventHandler<HTMLDivElement>;
 };
 
 const SearchResults = ({
-  results, setSelected, cards, getCard,
+  results, setSelected, cards, getCard, onScroll,
 }: SearchResultsProps) => {
   const [requested, setRequested] = useState<Record<string, any>>({});
   const filteredResults = results.reduce<Array<SearchResult>>((acc, result) => {
@@ -29,7 +30,7 @@ const SearchResults = ({
   }, []);
 
   return (
-    <div className={styles.results}>
+    <div className={styles.results} onScroll={onScroll}>
       {filteredResults.map((result) => {
         if (!cards[result.id] && !/\d/.test(result.cite) && !requested[result.id]) {
           getCard(result.id);
