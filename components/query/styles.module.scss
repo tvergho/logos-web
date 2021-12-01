@@ -1,11 +1,48 @@
+
+@import "../../styles/variables.scss";
+
 .search {
   margin-right: 10px;
   padding: 5px 10px;
-  width: 250px;
+  width: calc(30vw - 150px);
+  min-width: 250px;
+  font-family: inherit;
+  border: 1px solid $dark-green;
+  border-radius: 5px;
+  font-size: 18px;
+  outline: 0;
+
+  &::placeholder {
+    font-weight: 300;
+    font-size: 16px;
+    color: rgba(0,0,0,0.4);
+  }
 }
 
 .button {
-  padding: 5px 10px;
+  padding: 7px;
+  width: 100px;
+  font-family: inherit;
+  font-weight: 700;
+  background-color: white;
+  border: 1px solid $dark-green;
+  border-radius: 5px;
+  font-size: 16px;
+  color: $dark-green;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.loading {
+  height: 30px;
+  margin-bottom: 10px;
 }
 
 .results {
@@ -14,7 +51,7 @@
 }
 
 .result {
-  margin: 30px 0;
+  margin-bottom: 30px;
 }
 
 .card {
@@ -33,4 +70,11 @@
 
 .download {
   margin-top: 50px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }

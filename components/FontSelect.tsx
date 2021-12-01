@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styles from './styles.module.scss';
 
 const fonts = [
   'Calibri',
@@ -16,7 +17,7 @@ const FontSelect = () => {
   }, [selectedFont]);
 
   return (
-    <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
+    <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)} className={styles['font-select']}>
       {fonts.map((font) => (
         <option value={font} key={font}>{font}</option>
       ))}

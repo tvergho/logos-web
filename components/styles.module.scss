@@ -10,3 +10,14 @@
     opacity: 0.5;
   }
 }
+
+.font-select { 
+  padding: 5px;
+  padding-top: 7px;
+  cursor: pointer;
+  outline: 0;
+  font-size: 14px;
+  color: rgba(0,0,0,0.7);
+  font-family: inherit;
+  min-width: 200px;
+}

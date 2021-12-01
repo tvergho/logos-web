@@ -8,11 +8,14 @@ const QueryPage = () => {
   const [results, setResults] = useState([]);
   const [cards, setCards] = useState<Record<string, any>>({});
   const [selectedCard, setSelectedCard] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const search = async () => {
     if (query.length > 0) {
+      setLoading(true);
       const response = await apiService.search(query);
       setResults(response);
+      setLoading(false);
     }
   };
 
@@ -38,7 +41,7 @@ const QueryPage = () => {
       </Head>
 
       <div className="page-row">
-        <InputBox value={query} onChange={setQuery} onSearch={search} />
+        <InputBox value={query} onChange={setQuery} onSearch={search} loading={loading} />
       </div>
 
       <div className="page-row">
