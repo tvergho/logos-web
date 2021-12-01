@@ -21,7 +21,7 @@ const SearchResults = ({
 }: SearchResultsProps) => {
   const [requested, setRequested] = useState<Record<string, any>>({});
   const filteredResults = results.reduce<Array<SearchResult>>((acc, result) => {
-    const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(r.tag, result.tag) > 0.8; });
+    const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.8; });
     if (!hasSimilarMatch) {
       return [...acc, result];
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import { InputBox, SearchResults, CardDetail } from '../components/query';
-import FontSelect from '../components/FontSelect';
 import * as apiService from '../services/api';
 
 const QueryPage = () => {
@@ -31,11 +31,17 @@ const QueryPage = () => {
 
   return (
     <div className="query-page">
-      <div className="query-body">
+      <Head>
+        <title>Logos: A Debate Search Engine</title>
+        <meta name="description" content="Search the wiki for cards" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="page-row">
         <InputBox value={query} onChange={setQuery} onSearch={search} />
-        <FontSelect />
       </div>
-      <div className="query-body">
+
+      <div className="page-row">
         <SearchResults results={results} setSelected={setSelectedCard} cards={cards} getCard={getCard} />
         <CardDetail card={cards[selectedCard]} />
       </div>
