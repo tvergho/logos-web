@@ -99,7 +99,7 @@ const SearchResults = ({
         loadMoreRows={loadMore}
         rowCount={10000000}
         ref={loader}
-        threshold={10}
+        threshold={2}
       >
         {({ onRowsRendered, registerChild }) => (
           <AutoSizer>
