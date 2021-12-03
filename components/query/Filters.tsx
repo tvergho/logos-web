@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import styles from './styles.module.scss';
 
-const Filters = () => {
-  const [selectionRange, setSelectionRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'selection',
-  });
+type FiltersProps = {
+  selectionRange: {
+    startDate: Date,
+    endDate: Date,
+    key: string,
+  },
+  handleSelect: (ranges: RangeKeyDict) => void,
+}
 
-  const handleSelect = (ranges: RangeKeyDict) => {
-    if (ranges.selection.startDate && ranges.selection.endDate) {
-      setSelectionRange((prev) => { return { ...prev, startDate: ranges.selection.startDate as Date, endDate: ranges.selection.endDate as Date }; });
-    }
-  };
-
+const Filters = ({ selectionRange, handleSelect }: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
