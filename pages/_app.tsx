@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import '../styles/globals.scss';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
 import FontSelect from '../components/FontSelect';

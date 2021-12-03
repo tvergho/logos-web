@@ -121,3 +121,10 @@
     opacity: 0.5;
   }
 }
+
+.filters {
+  position: absolute;
+  right: 50px;
+  z-index: 10;
+  background-color: transparent;
+}

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { InputBox, SearchResults, CardDetail } from '../components/query';
+import {
+  InputBox, SearchResults, CardDetail, Filters,
+} from '../components/query';
 import * as apiService from '../services/api';
 import { SearchResult } from '../lib/types';
 
@@ -76,6 +78,7 @@ const QueryPage = () => {
 
       <div className="page-row">
         <InputBox value={query} onChange={setQuery} onSearch={onSearch} loading={loading} />
+        <Filters />
       </div>
 
       <div className="page-row">
