@@ -22,4 +22,5 @@ export type Card = {
   underlines: [[number, number, number]],
   cite_emphasis?: [[number, number]],
   download_url?: string;
+  tag_sub?: string;
 }
