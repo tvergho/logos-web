@@ -31,7 +31,7 @@ const QueryPage = () => {
         router.push({
           pathname: '/query',
           query: {
-            search: encodeURI(urlSearch as string),
+            search: urlSearch as string,
             start_date: format((ranges.selection.startDate as Date), 'yyyy-MM-dd'),
             end_date: format((ranges.selection.endDate as Date), 'yyyy-MM-dd'),
           },
