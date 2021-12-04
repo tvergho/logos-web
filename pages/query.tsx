@@ -8,7 +8,9 @@ import {
 } from '../components/query';
 import * as apiService from '../services/api';
 import { SearchResult } from '../lib/types';
-import { SideOption, sideOptions } from '../lib/constants';
+import {
+  SideOption, sideOptions, divisionOptions, DivisionOption,
+} from '../lib/constants';
 
 const QueryPage = () => {
   const [query, setQuery] = useState('');
@@ -20,11 +22,12 @@ const QueryPage = () => {
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
 
-  const urlSelectedValues = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
+  const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
+  const urlSelectedDivision = divisionOptions.filter((division) => { return !exclude_division?.includes(division.value); });
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -38,6 +41,7 @@ const QueryPage = () => {
       ...(params.start_date || start_date) && { start_date: params.start_date ? params.start_date : start_date as string },
       ...(params.end_date || end_date) && { end_date: params.end_date ? params.end_date : end_date as string },
       ...(params.exclude_sides || exclude_sides) && { exclude_sides: params.exclude_sides ? params.exclude_sides : exclude_sides as string },
+      ...(params.exclude_division || exclude_division) && { exclude_division: params.exclude_division ? params.exclude_division : exclude_division as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -93,6 +97,8 @@ const QueryPage = () => {
       cursor: c,
       ...(start_date) && { start_date },
       ...(end_date) && { end_date },
+      ...(exclude_sides) && { exclude_sides },
+      ...(exclude_division) && { exclude_division },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
@@ -101,6 +107,7 @@ const QueryPage = () => {
         ...(start_date) && { start_date },
         ...(end_date) && { end_date },
         ...(exclude_sides) && { exclude_sides },
+        ...(exclude_division) && { exclude_division },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -164,6 +171,14 @@ const QueryPage = () => {
     }
   };
 
+  const onDivisionSelect = (divisions: DivisionOption[]) => {
+    if (divisions.length === 1) {
+      updateUrl({ exclude_division: divisionOptions.filter((opt) => !divisions.find((div) => div.value === opt.value)).map((opt) => opt.value).join('') });
+    } else if (divisions.length === 2) {
+      updateUrl({}, ['exclude_division']);
+    }
+  };
+
   return (
     <div className="query-page">
       <Head>
@@ -179,7 +194,8 @@ const QueryPage = () => {
           handleSelect={handleSelect}
           resetDate={resetDate}
           onSideSelect={onSideSelect}
-          urlValues={{ sides: urlSelectedValues }}
+          urlValues={{ sides: urlSelectedSides, division: urlSelectedDivision }}
+          onDivisionSelect={onDivisionSelect}
         />
       </div>
 

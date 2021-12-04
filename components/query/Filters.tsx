@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
 import styles from './styles.module.scss';
-import { sideOptions, SideOption } from '../../lib/constants';
+import {
+  sideOptions, SideOption, divisionOptions, DivisionOption,
+} from '../../lib/constants';
 
 type FiltersProps = {
   selectionRange: {
@@ -14,10 +16,12 @@ type FiltersProps = {
   resetDate: () => void,
   onSideSelect: (selected: SideOption[]) => void,
   urlValues: {[key: string]: any},
+  onDivisionSelect: (selected: DivisionOption[]) => void,
+
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect,
 }: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
@@ -78,6 +82,20 @@ const Filters = ({
           placeholder=""
           onSelect={onSideSelect}
           onRemove={onSideSelect}
+        />
+      </div>
+      <div className={styles.filter}>
+        <h6>DIVISION</h6>
+        <Multiselect
+          options={divisionOptions}
+          displayValue="name"
+          selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
+          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 } }}
+          hidePlaceholder
+          emptyRecordMsg=""
+          placeholder=""
+          onSelect={onDivisionSelect}
+          onRemove={onDivisionSelect}
         />
       </div>
     </div>
