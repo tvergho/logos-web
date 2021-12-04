@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
-import Select, { OnChangeValue } from 'react-select';
-import { sideOptions, SideOption } from '../../lib/constants';
 import styles from './styles.module.scss';
 
 type FiltersProps = {
@@ -11,19 +9,11 @@ type FiltersProps = {
     key: string,
   },
   handleSelect: (ranges: RangeKeyDict) => void,
-  sides: readonly SideOption[],
-  selectSide: (val: OnChangeValue<SideOption, true>) => void,
+  resetDate: () => void,
 }
 
-const customStyles = {
-  control: (provided: any) => ({
-    ...provided,
-    width: 220,
-  }),
-};
-
 const Filters = ({
-  selectionRange, handleSelect, sides, selectSide,
+  selectionRange, handleSelect, resetDate,
 }: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
@@ -58,7 +48,10 @@ const Filters = ({
   return (
     <div className={styles.filters}>
       <div className={`${styles.filter} ${styles['range-container']}`}>
-        <h6 className={styles.range}>DATE</h6>
+        <div className={styles['filter-row']}>
+          <h6 className={styles.range}>DATE</h6>
+          <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
+        </div>
         <DateRangePicker
           ranges={[selectionRange]}
           onChange={handleSelect}
@@ -70,14 +63,6 @@ const Filters = ({
       </div>
       <div className={styles.filter}>
         <h6>SIDE</h6>
-        <Select
-          options={sideOptions}
-          isMulti
-          defaultValue={[sideOptions[0], sideOptions[1]]}
-          styles={customStyles}
-          value={sides}
-          onChange={selectSide}
-        />
       </div>
     </div>
   );

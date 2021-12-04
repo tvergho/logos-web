@@ -144,7 +144,7 @@
     margin: 0;
     color: rgba(0,0,0,0.5);
     letter-spacing: 3px;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
   }
   .range {
     margin-bottom: -5px;
@@ -154,4 +154,31 @@
 
 .range-container {
   margin-top: -1px;
+}
+
+.filter-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.clear {
+  background: 0;
+  outline: 0;
+  color: rgba(0,0,0,0.4);
+  margin-left: 10px;
+  font-size: 12px;
+  transition: all 0.3s;
+  border: 0;
+  cursor: pointer;
+  margin-top: 4px;
+  font-family: inherit;
+
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 0.5;
+  }
 }
