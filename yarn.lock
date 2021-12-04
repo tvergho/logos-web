@@ -2411,6 +2411,11 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
+multiselect-react-dropdown@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/multiselect-react-dropdown/-/multiselect-react-dropdown-2.0.7.tgz#3d5545f59b99b9341df37dd325ddac4efea189bb"
+  integrity sha512-7aBKFd1t/bQOvYxHqxYnT6650GFog2d+BjJKwEuRc0UWoDUTkADljqc4bd6n1mQYhN1K2Ouds6x72bo/Wg4CJA==
+
 nanoid@^3.1.23:
   version "3.1.30"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"

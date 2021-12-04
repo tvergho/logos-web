@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
+import Multiselect from 'multiselect-react-dropdown';
 import styles from './styles.module.scss';
+import { sideOptions } from '../../lib/constants';
 
 type FiltersProps = {
   selectionRange: {
@@ -63,6 +65,15 @@ const Filters = ({
       </div>
       <div className={styles.filter}>
         <h6>SIDE</h6>
+        <Multiselect
+          options={sideOptions}
+          displayValue="name"
+          selectedValues={[sideOptions[0], sideOptions[1]]}
+          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 } }}
+          hidePlaceholder
+          emptyRecordMsg=""
+          placeholder=""
+        />
       </div>
     </div>
   );
