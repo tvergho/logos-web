@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
+import Select, { OnChangeValue } from 'react-select';
+import { sideOptions, SideOption } from '../../lib/constants';
 import styles from './styles.module.scss';
 
 type FiltersProps = {
@@ -9,9 +11,20 @@ type FiltersProps = {
     key: string,
   },
   handleSelect: (ranges: RangeKeyDict) => void,
+  sides: readonly SideOption[],
+  selectSide: (val: OnChangeValue<SideOption, true>) => void,
 }
 
-const Filters = ({ selectionRange, handleSelect }: FiltersProps) => {
+const customStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    width: 220,
+  }),
+};
+
+const Filters = ({
+  selectionRange, handleSelect, sides, selectSide,
+}: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
@@ -44,14 +57,28 @@ const Filters = ({ selectionRange, handleSelect }: FiltersProps) => {
 
   return (
     <div className={styles.filters}>
-      <DateRangePicker
-        ranges={[selectionRange]}
-        onChange={handleSelect}
-        staticRanges={[]}
-        inputRanges={[]}
-        maxDate={new Date()}
-        minDate={new Date('01-01-1900')}
-      />
+      <div className={`${styles.filter} ${styles['range-container']}`}>
+        <h6 className={styles.range}>DATE</h6>
+        <DateRangePicker
+          ranges={[selectionRange]}
+          onChange={handleSelect}
+          staticRanges={[]}
+          inputRanges={[]}
+          maxDate={new Date()}
+          minDate={new Date('01-01-1900')}
+        />
+      </div>
+      <div className={styles.filter}>
+        <h6>SIDE</h6>
+        <Select
+          options={sideOptions}
+          isMulti
+          defaultValue={[sideOptions[0], sideOptions[1]]}
+          styles={customStyles}
+          value={sides}
+          onChange={selectSide}
+        />
+      </div>
     </div>
   );
 };
