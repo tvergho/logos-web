@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
 import styles from './styles.module.scss';
-import { sideOptions } from '../../lib/constants';
+import { sideOptions, SideOption } from '../../lib/constants';
 
 type FiltersProps = {
   selectionRange: {
@@ -12,10 +12,12 @@ type FiltersProps = {
   },
   handleSelect: (ranges: RangeKeyDict) => void,
   resetDate: () => void,
+  onSideSelect: (selected: SideOption[]) => void,
+  urlValues: {[key: string]: any},
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues,
 }: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
@@ -61,6 +63,7 @@ const Filters = ({
           inputRanges={[]}
           maxDate={new Date()}
           minDate={new Date('01-01-1900')}
+          editableDateInputs
         />
       </div>
       <div className={styles.filter}>
@@ -68,11 +71,13 @@ const Filters = ({
         <Multiselect
           options={sideOptions}
           displayValue="name"
-          selectedValues={[sideOptions[0], sideOptions[1]]}
-          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 } }}
+          selectedValues={urlValues.sides || [sideOptions[0], sideOptions[1]]}
+          style={{ multiselectContainer: { width: 200 }, inputField: { width: 50 } }}
           hidePlaceholder
           emptyRecordMsg=""
           placeholder=""
+          onSelect={onSideSelect}
+          onRemove={onSideSelect}
         />
       </div>
     </div>

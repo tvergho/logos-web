@@ -8,6 +8,7 @@ import {
 } from '../components/query';
 import * as apiService from '../services/api';
 import { SearchResult } from '../lib/types';
+import { SideOption, sideOptions } from '../lib/constants';
 
 const QueryPage = () => {
   const [query, setQuery] = useState('');
@@ -17,12 +18,13 @@ const QueryPage = () => {
   const [loading, setLoading] = useState(false);
   const [scrollCursor, setScrollCursor] = useState(0);
   const router = useRouter();
+  const { query: routerQuery } = router;
   const {
-    query: {
-      search: urlSearch, start_date, end_date,
-    },
-  } = router;
+    search: urlSearch, start_date, end_date, exclude_sides,
+  } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
+
+  const urlSelectedValues = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -35,6 +37,7 @@ const QueryPage = () => {
       ...(params.search || urlSearch) && { search: params.search ? params.search : urlSearch as string },
       ...(params.start_date || start_date) && { start_date: params.start_date ? params.start_date : start_date as string },
       ...(params.end_date || end_date) && { end_date: params.end_date ? params.end_date : end_date as string },
+      ...(params.exclude_sides || exclude_sides) && { exclude_sides: params.exclude_sides ? params.exclude_sides : exclude_sides as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -97,6 +100,7 @@ const QueryPage = () => {
       apiService.search(query, c, {
         ...(start_date) && { start_date },
         ...(end_date) && { end_date },
+        ...(exclude_sides) && { exclude_sides },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -137,7 +141,7 @@ const QueryPage = () => {
         };
       });
     }
-  }, [urlSearch, start_date, end_date]);
+  }, [routerQuery]);
 
   const getCard = async (id: string) => {
     if (!cards[id]) {
@@ -152,6 +156,14 @@ const QueryPage = () => {
     }
   }, [selectedCard]);
 
+  const onSideSelect = (sides: SideOption[]) => {
+    if (sides.length === 1) {
+      updateUrl({ exclude_sides: sideOptions.filter((opt) => !sides.find((side) => side.value === opt.value)).map((opt) => opt.name).join('') });
+    } else if (sides.length === 2) {
+      updateUrl({}, ['exclude_sides']);
+    }
+  };
+
   return (
     <div className="query-page">
       <Head>
@@ -162,7 +174,13 @@ const QueryPage = () => {
 
       <div className="page-row">
         <InputBox value={query} onChange={setQuery} onSearch={onSearch} loading={loading} />
-        <Filters selectionRange={dateRange} handleSelect={handleSelect} resetDate={resetDate} />
+        <Filters
+          selectionRange={dateRange}
+          handleSelect={handleSelect}
+          resetDate={resetDate}
+          onSideSelect={onSideSelect}
+          urlValues={{ sides: urlSelectedValues }}
+        />
       </div>
 
       <div className="page-row">
