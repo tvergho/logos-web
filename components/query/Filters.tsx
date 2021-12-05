@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
+import { motion } from 'framer-motion';
 import styles from './styles.module.scss';
 import {
   sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
@@ -28,6 +29,8 @@ type FiltersProps = {
 const Filters = ({
   selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, setSchools, schools, resetSchools,
 }: FiltersProps) => {
+  const [isFiltersShown, setIsFiltersShown] = useState(false);
+
   useEffect(() => {
     apiService.getSchools().then((schools) => {
       const { colleges } = schools;
@@ -63,89 +66,92 @@ const Filters = ({
     for (let i = 0; i < elements2.length; i += 1) {
       elements2[i].style.display = 'none';
     }
-  }, []);
+  }, [isFiltersShown]);
 
   return (
-    <div className={styles.filters}>
-      <div className={`${styles.filter} ${styles['range-container']}`}>
-        <div className={styles['filter-row']}>
-          <h6 className={styles.range}>DATE</h6>
-          <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
+    <>
+      <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
+      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? 100 : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
+        <div className={`${styles.filter} ${styles['range-container']}`}>
+          <div className={styles['filter-row']}>
+            <h6 className={styles.range}>DATE</h6>
+            <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
+          </div>
+          <DateRangePicker
+            ranges={[selectionRange]}
+            onChange={handleSelect}
+            staticRanges={[]}
+            inputRanges={[]}
+            maxDate={new Date()}
+            minDate={new Date('01-01-1900')}
+            editableDateInputs
+          />
         </div>
-        <DateRangePicker
-          ranges={[selectionRange]}
-          onChange={handleSelect}
-          staticRanges={[]}
-          inputRanges={[]}
-          maxDate={new Date()}
-          minDate={new Date('01-01-1900')}
-          editableDateInputs
-        />
-      </div>
-      <div className={styles.filter}>
-        <h6>SIDE</h6>
-        <Multiselect
-          options={sideOptions}
-          displayValue="name"
-          selectedValues={urlValues.sides || [sideOptions[0], sideOptions[1]]}
-          style={{ multiselectContainer: { width: 200 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
-          hidePlaceholder
-          emptyRecordMsg=""
-          placeholder=""
-          onSelect={onSideSelect}
-          onRemove={onSideSelect}
-        />
-      </div>
-      <div className={styles.filter}>
-        <h6>DIVISION</h6>
-        <Multiselect
-          options={divisionOptions}
-          displayValue="name"
-          selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
-          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
-          hidePlaceholder
-          emptyRecordMsg=""
-          placeholder=""
-          onSelect={onDivisionSelect}
-          onRemove={onDivisionSelect}
-        />
-      </div>
-      <div className={styles.filter}>
-        <h6>YEAR</h6>
-        <Multiselect
-          options={yearOptions}
-          displayValue="name"
-          selectedValues={urlValues.year || [yearOptions[0], yearOptions[1]]}
-          style={{ multiselectContainer: { width: 100 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
-          hidePlaceholder
-          emptyRecordMsg=""
-          placeholder=""
-          onSelect={onYearSelect}
-          onRemove={onYearSelect}
-          showCheckbox
-          showArrow
-        />
-      </div>
-      <div className={styles.filter}>
-        <div className={styles['filter-row']}>
-          <h6>SCHOOLS</h6>
-          <button type="button" onClick={resetSchools} className={styles.clear}>{urlValues.schools?.length === schools.length ? 'deselect all' : 'select all'}</button>
+        <div className={styles.filter}>
+          <h6>SIDE</h6>
+          <Multiselect
+            options={sideOptions}
+            displayValue="name"
+            selectedValues={urlValues.sides || [sideOptions[0], sideOptions[1]]}
+            style={{ multiselectContainer: { width: 200 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
+            hidePlaceholder
+            emptyRecordMsg=""
+            placeholder=""
+            onSelect={onSideSelect}
+            onRemove={onSideSelect}
+          />
         </div>
-        <Multiselect
-          options={schools}
-          displayValue="name"
-          selectedValues={urlValues.schools || schools}
-          style={{ multiselectContainer: { width: 100 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
-          hidePlaceholder
-          emptyRecordMsg=""
-          placeholder=""
-          onSelect={onSchoolSelect}
-          onRemove={onSchoolSelect}
-          showCheckbox
-          showArrow
-        />
-      </div>
-    </div>
+        <div className={styles.filter}>
+          <h6>DIVISION</h6>
+          <Multiselect
+            options={divisionOptions}
+            displayValue="name"
+            selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
+            style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
+            hidePlaceholder
+            emptyRecordMsg=""
+            placeholder=""
+            onSelect={onDivisionSelect}
+            onRemove={onDivisionSelect}
+          />
+        </div>
+        <div className={styles.filter}>
+          <h6>YEAR</h6>
+          <Multiselect
+            options={yearOptions}
+            displayValue="name"
+            selectedValues={urlValues.year || [yearOptions[0], yearOptions[1]]}
+            style={{ multiselectContainer: { width: 100 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
+            hidePlaceholder
+            emptyRecordMsg=""
+            placeholder=""
+            onSelect={onYearSelect}
+            onRemove={onYearSelect}
+            showCheckbox
+            showArrow
+          />
+        </div>
+        <div className={styles.filter}>
+          <div className={styles['filter-row']}>
+            <h6>SCHOOLS</h6>
+            <button type="button" onClick={resetSchools} className={styles.clear}>{urlValues.schools?.length === schools.length ? 'deselect all' : 'select all'}</button>
+          </div>
+          <Multiselect
+            options={schools}
+            displayValue="name"
+            selectedValues={urlValues.schools || schools}
+            style={{ multiselectContainer: { width: 200 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
+            hidePlaceholder
+            emptyRecordMsg=""
+            placeholder=""
+            onSelect={onSchoolSelect}
+            onRemove={onSchoolSelect}
+            showCheckbox
+            showArrow
+          />
+        </div>
+      </motion.div>
+    </>
   );
 };
 

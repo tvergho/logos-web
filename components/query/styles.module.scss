@@ -41,7 +41,7 @@
 }
 
 .loading {
-  height: 50px;
+  height: 30px;
 }
 
 .results {
@@ -113,6 +113,29 @@
   margin-left: 5px;
   transition: all 0.3s;
   cursor: pointer;
+  visibility: inherit;
+
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.filter-prompt {
+  font-size: 16px;
+  font-weight: 300;
+  color: $dark-green;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: absolute;
+  right: 50px;
+  z-index: 12;
+  background: none;
+  outline: 0;
+  border: 0;
+  font-family: inherit;
 
   &:hover {
     opacity: 0.7;
@@ -124,13 +147,18 @@
 
 .filters {
   position: absolute;
+  margin-top: 40px;
   right: 50px;
   z-index: 10;
-  background-color: transparent;
+  background-color: white;
+  height: 0px;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: flex-start;
   justify-content: flex-end;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .filter {
@@ -138,22 +166,17 @@
   flex-direction: column;
   justify-content: flex-start;
   margin: 0 10px;
+  margin-top: 15px;
 
   h6 {
     font-size: 14px;
     margin: 0;
     color: rgba(0,0,0,0.5);
     letter-spacing: 3px;
-    margin-bottom: 10px;
   }
   .range {
-    margin-bottom: -5px;
-    margin-left: 5px;
+    margin-left: 10px;
   }
-}
-
-.range-container {
-  margin-top: -1px;
 }
 
 .filter-row {
@@ -167,13 +190,13 @@
   background: 0;
   outline: 0;
   color: rgba(0,0,0,0.4);
-  margin-left: 10px;
+  margin-left: 5px;
   font-size: 12px;
   transition: all 0.3s;
   border: 0;
   cursor: pointer;
-  margin-top: 4px;
   font-family: inherit;
+  visibility: inherit;
 
   &:hover {
     opacity: 0.7;
