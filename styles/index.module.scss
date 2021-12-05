@@ -1,0 +1,69 @@
+@import "./variables.scss";
+
+.container {
+  background-color: $primary-green;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo {
+  color: white;
+  font-weight: 700;
+  font-family: Cabin Sketch;
+  font-size: calc(max(5vw, 64px));
+  margin: 0;
+}
+
+.subtitle {
+  color: white;
+  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  margin: 0;
+}
+
+.search {
+  background: white;
+  border-radius: 5px;
+  border: 0;
+  outline: 0;
+  padding: 10px;
+  width: 50vw;
+  margin-top: 40px;
+  font-size: 18px;
+  color: rgba(0,0,0,0.7);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  &::placeholder {
+    color: rgba(0,0,0,0.5);
+    font-size: 16px;
+  }
+  &:focus::placeholder {
+    color: transparent;
+  }
+}
+
+.submit {
+  background: white;
+  border-radius: 5px;
+  border: 0;
+  outline: 0;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.3s all;
+  margin-left: 10px;
+  font-size: 16px;
+  color: rgba(0,0,0,0.7);
+  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}
