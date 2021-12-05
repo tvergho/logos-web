@@ -3,7 +3,7 @@ import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
 import styles from './styles.module.scss';
 import {
-  sideOptions, SideOption, divisionOptions, DivisionOption,
+  sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption,
 } from '../../lib/constants';
 
 type FiltersProps = {
@@ -17,11 +17,11 @@ type FiltersProps = {
   onSideSelect: (selected: SideOption[]) => void,
   urlValues: {[key: string]: any},
   onDivisionSelect: (selected: DivisionOption[]) => void,
-
+  onYearSelect: (selected: YearOption[]) => void,
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect,
 }: FiltersProps) => {
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
@@ -76,7 +76,7 @@ const Filters = ({
           options={sideOptions}
           displayValue="name"
           selectedValues={urlValues.sides || [sideOptions[0], sideOptions[1]]}
-          style={{ multiselectContainer: { width: 200 }, inputField: { width: 50 } }}
+          style={{ multiselectContainer: { width: 200 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
           hidePlaceholder
           emptyRecordMsg=""
           placeholder=""
@@ -90,12 +90,28 @@ const Filters = ({
           options={divisionOptions}
           displayValue="name"
           selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
-          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 } }}
+          style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
           hidePlaceholder
           emptyRecordMsg=""
           placeholder=""
           onSelect={onDivisionSelect}
           onRemove={onDivisionSelect}
+        />
+      </div>
+      <div className={styles.filter}>
+        <h6>YEAR</h6>
+        <Multiselect
+          options={yearOptions}
+          displayValue="name"
+          selectedValues={urlValues.year || [yearOptions[0], yearOptions[1]]}
+          style={{ multiselectContainer: { width: 100 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
+          hidePlaceholder
+          emptyRecordMsg=""
+          placeholder=""
+          onSelect={onYearSelect}
+          onRemove={onYearSelect}
+          showCheckbox
+          showArrow
         />
       </div>
     </div>

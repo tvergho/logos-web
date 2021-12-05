@@ -9,3 +9,9 @@ export const divisionOptions = [
   { name: 'High School', value: 'high-school', id: 2 },
 ];
 export type DivisionOption = typeof divisionOptions[number];
+
+export const yearOptions = [
+  { name: '21-22', id: 1 },
+  { name: '20-21', id: 2 },
+];
+export type YearOption = typeof yearOptions[number];

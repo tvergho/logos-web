@@ -9,7 +9,7 @@ import {
 import * as apiService from '../services/api';
 import { SearchResult } from '../lib/types';
 import {
-  SideOption, sideOptions, divisionOptions, DivisionOption,
+  SideOption, sideOptions, divisionOptions, DivisionOption, yearOptions, YearOption,
 } from '../lib/constants';
 
 const QueryPage = () => {
@@ -22,12 +22,13 @@ const QueryPage = () => {
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides, exclude_division,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
 
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
   const urlSelectedDivision = divisionOptions.filter((division) => { return !exclude_division?.includes(division.value); });
+  const urlSelectedYears = yearOptions.filter((year) => { return !exclude_years?.includes(year.name); });
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -42,6 +43,7 @@ const QueryPage = () => {
       ...(params.end_date || end_date) && { end_date: params.end_date ? params.end_date : end_date as string },
       ...(params.exclude_sides || exclude_sides) && { exclude_sides: params.exclude_sides ? params.exclude_sides : exclude_sides as string },
       ...(params.exclude_division || exclude_division) && { exclude_division: params.exclude_division ? params.exclude_division : exclude_division as string },
+      ...(params.exclude_years || exclude_years) && { exclude_years: params.exclude_years ? params.exclude_years : exclude_years as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -99,6 +101,7 @@ const QueryPage = () => {
       ...(end_date) && { end_date },
       ...(exclude_sides) && { exclude_sides },
       ...(exclude_division) && { exclude_division },
+      ...(exclude_years) && { exclude_years },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
@@ -108,6 +111,7 @@ const QueryPage = () => {
         ...(end_date) && { end_date },
         ...(exclude_sides) && { exclude_sides },
         ...(exclude_division) && { exclude_division },
+        ...(exclude_years) && { exclude_years },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -179,6 +183,13 @@ const QueryPage = () => {
     }
   };
 
+  const onYearSelect = (years: YearOption[]) => {
+    if (years.length < yearOptions.length) {
+      updateUrl({ exclude_years: yearOptions.filter((opt) => !years.find((div) => div.name === opt.name)).map((opt) => opt.name).join(',') });
+    } else {
+      updateUrl({}, ['exclude_years']);
+    }
+  };
   return (
     <div className="query-page">
       <Head>
@@ -194,8 +205,9 @@ const QueryPage = () => {
           handleSelect={handleSelect}
           resetDate={resetDate}
           onSideSelect={onSideSelect}
-          urlValues={{ sides: urlSelectedSides, division: urlSelectedDivision }}
+          urlValues={{ sides: urlSelectedSides, division: urlSelectedDivision, year: urlSelectedYears }}
           onDivisionSelect={onDivisionSelect}
+          onYearSelect={onYearSelect}
         />
       </div>
 
