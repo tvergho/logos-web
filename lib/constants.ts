@@ -15,3 +15,8 @@ export const yearOptions = [
   { name: '20-21', id: 2 },
 ];
 export type YearOption = typeof yearOptions[number];
+
+export type SchoolOption = {
+  name: string;
+  id: number;
+}

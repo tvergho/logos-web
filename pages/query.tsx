@@ -9,7 +9,7 @@ import {
 import * as apiService from '../services/api';
 import { SearchResult } from '../lib/types';
 import {
-  SideOption, sideOptions, divisionOptions, DivisionOption, yearOptions, YearOption,
+  SideOption, sideOptions, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
 } from '../lib/constants';
 
 const QueryPage = () => {
@@ -19,16 +19,18 @@ const QueryPage = () => {
   const [selectedCard, setSelectedCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [scrollCursor, setScrollCursor] = useState(0);
+  const [schools, setSchools] = useState<Array<SchoolOption>>([]);
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
 
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
   const urlSelectedDivision = divisionOptions.filter((division) => { return !exclude_division?.includes(division.value); });
   const urlSelectedYears = yearOptions.filter((year) => { return !exclude_years?.includes(year.name); });
+  const urlSelectedSchools = schools.filter((school) => { return !exclude_schools?.includes(school.name); });
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -44,6 +46,7 @@ const QueryPage = () => {
       ...(params.exclude_sides || exclude_sides) && { exclude_sides: params.exclude_sides ? params.exclude_sides : exclude_sides as string },
       ...(params.exclude_division || exclude_division) && { exclude_division: params.exclude_division ? params.exclude_division : exclude_division as string },
       ...(params.exclude_years || exclude_years) && { exclude_years: params.exclude_years ? params.exclude_years : exclude_years as string },
+      ...(params.exclude_schools || exclude_schools) && { exclude_schools: params.exclude_schools ? params.exclude_schools : exclude_schools as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -87,6 +90,14 @@ const QueryPage = () => {
     });
   };
 
+  const resetSchools = () => {
+    if (urlSelectedSchools.length !== schools.length) {
+      updateUrl({}, ['exclude_schools']);
+    } else {
+      updateUrl({ exclude_schools: schools.map((school) => school.name).join(',') });
+    }
+  };
+
   const onSearch = async () => {
     if (query && query.length > 0) {
       updateUrl({ search: encodeURI(query) });
@@ -102,6 +113,7 @@ const QueryPage = () => {
       ...(exclude_sides) && { exclude_sides },
       ...(exclude_division) && { exclude_division },
       ...(exclude_years) && { exclude_years },
+      ...(exclude_schools) && { exclude_schools },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
@@ -112,6 +124,7 @@ const QueryPage = () => {
         ...(exclude_sides) && { exclude_sides },
         ...(exclude_division) && { exclude_division },
         ...(exclude_years) && { exclude_years },
+        ...(exclude_schools) && { exclude_schools },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -190,6 +203,15 @@ const QueryPage = () => {
       updateUrl({}, ['exclude_years']);
     }
   };
+
+  const onSchoolSelect = (s: SchoolOption[]) => {
+    if (s.length < schools.length) {
+      updateUrl({ exclude_schools: schools.filter((opt) => !s.find((school) => school.name === opt.name)).map((opt) => opt.name).join(',') });
+    } else {
+      updateUrl({}, ['exclude_schools']);
+    }
+  };
+
   return (
     <div className="query-page">
       <Head>
@@ -205,9 +227,15 @@ const QueryPage = () => {
           handleSelect={handleSelect}
           resetDate={resetDate}
           onSideSelect={onSideSelect}
-          urlValues={{ sides: urlSelectedSides, division: urlSelectedDivision, year: urlSelectedYears }}
+          urlValues={{
+            sides: urlSelectedSides, division: urlSelectedDivision, year: urlSelectedYears, schools: urlSelectedSchools,
+          }}
           onDivisionSelect={onDivisionSelect}
           onYearSelect={onYearSelect}
+          onSchoolSelect={onSchoolSelect}
+          setSchools={setSchools}
+          schools={schools}
+          resetSchools={resetSchools}
         />
       </div>
 

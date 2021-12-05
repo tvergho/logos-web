@@ -15,3 +15,8 @@ export const getCard = async (id: string) => {
   const response = await axios.get(`${apiUrl}/card?id=${id}`);
   return response.data;
 };
+
+export const getSchools = async () => {
+  const response = await axios.get(`${apiUrl}/schools`);
+  return response.data;
+};

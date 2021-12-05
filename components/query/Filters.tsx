@@ -3,8 +3,9 @@ import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
 import styles from './styles.module.scss';
 import {
-  sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption,
+  sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
 } from '../../lib/constants';
+import * as apiService from '../../services/api';
 
 type FiltersProps = {
   selectionRange: {
@@ -14,15 +15,26 @@ type FiltersProps = {
   },
   handleSelect: (ranges: RangeKeyDict) => void,
   resetDate: () => void,
+  resetSchools: () => void,
   onSideSelect: (selected: SideOption[]) => void,
   urlValues: {[key: string]: any},
   onDivisionSelect: (selected: DivisionOption[]) => void,
   onYearSelect: (selected: YearOption[]) => void,
+  onSchoolSelect: (selected: SchoolOption[]) => void,
+  setSchools: (schools: SchoolOption[]) => void,
+  schools: SchoolOption[],
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, setSchools, schools, resetSchools,
 }: FiltersProps) => {
+  useEffect(() => {
+    apiService.getSchools().then((schools) => {
+      const { colleges } = schools;
+      setSchools(colleges.map((college: string, i: number) => ({ name: college, id: i })));
+    });
+  }, []);
+
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
@@ -110,6 +122,25 @@ const Filters = ({
           placeholder=""
           onSelect={onYearSelect}
           onRemove={onYearSelect}
+          showCheckbox
+          showArrow
+        />
+      </div>
+      <div className={styles.filter}>
+        <div className={styles['filter-row']}>
+          <h6>SCHOOLS</h6>
+          <button type="button" onClick={resetSchools} className={styles.clear}>{urlValues.schools?.length === schools.length ? 'deselect all' : 'select all'}</button>
+        </div>
+        <Multiselect
+          options={schools}
+          displayValue="name"
+          selectedValues={urlValues.schools || schools}
+          style={{ multiselectContainer: { width: 100 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
+          hidePlaceholder
+          emptyRecordMsg=""
+          placeholder=""
+          onSelect={onSchoolSelect}
+          onRemove={onSchoolSelect}
           showCheckbox
           showArrow
         />
