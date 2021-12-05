@@ -42,6 +42,7 @@ const Filters = ({
   }, []);
 
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
+    console.log('toggle');
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
       elements[i].style.visibility = (elements[i].style.visibility === 'visible' || off) ? 'hidden' : 'visible';
@@ -59,7 +60,6 @@ const Filters = ({
   };
 
   useEffect(() => {
-    toggleCalendar(undefined, true);
     const elements = document.getElementsByClassName('rdrDateDisplayItem') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
       elements[i].addEventListener('click', toggleCalendar);
@@ -69,7 +69,18 @@ const Filters = ({
     for (let i = 0; i < elements2.length; i += 1) {
       elements2[i].style.display = 'none';
     }
+
+    return () => {
+      const elements3 = document.getElementsByClassName('rdrDateDisplayItem') as HTMLCollectionOf<HTMLElement>;
+      for (let i = 0; i < elements3.length; i += 1) {
+        elements3[i].removeEventListener('click', toggleCalendar);
+      }
+    };
   }, [isFiltersShown]);
+
+  useEffect(() => {
+    toggleCalendar(undefined, true);
+  }, []);
 
   return (
     <>
@@ -148,8 +159,6 @@ const Filters = ({
             onChange={handleSelect}
             staticRanges={[]}
             inputRanges={[]}
-            maxDate={new Date()}
-            minDate={new Date('01-01-1900')}
             editableDateInputs
           />
         </div>

@@ -42,6 +42,7 @@ const QueryPage = () => {
   });
 
   const updateUrl = (params: {[key: string]: string | undefined}, reset?: string[]) => {
+    console.log('update', params);
     const query: Record<string, string> = {
       ...(params.search || urlSearch) && { search: params.search ? params.search : urlSearch as string },
       ...(params.start_date || start_date) && { start_date: params.start_date ? params.start_date : start_date as string },
@@ -68,8 +69,8 @@ const QueryPage = () => {
           end_date: format((ranges.selection.endDate as Date), 'yyyy-MM-dd'),
         });
       } else {
-        const start = ranges.selection.startDate || (start_date ? new Date(start_date as string) : new Date());
-        const end = ranges.selection.endDate || (end_date ? new Date(end_date as string) : new Date());
+        const start = ranges.selection.startDate || (start_date && start_date.length > 2 ? new Date(start_date as string) : new Date());
+        const end = ranges.selection.endDate || (end_date && end_date.length > 2 ? new Date(end_date as string) : new Date());
         start.setUTCHours(12, 0, 0, 0);
         end.setUTCHours(12, 0, 0, 0);
 
