@@ -217,3 +217,12 @@
     flex-wrap: wrap;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .filter-prompt {
+    margin-top: 40px;
+  }
+  .filters {
+    margin-top: 80px;
+  }
+}

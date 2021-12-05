@@ -42,7 +42,6 @@ const Filters = ({
   }, []);
 
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
-    console.log('toggle');
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {
       elements[i].style.visibility = (elements[i].style.visibility === 'visible' || off) ? 'hidden' : 'visible';
@@ -85,7 +84,7 @@ const Filters = ({
   return (
     <>
       <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
-      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 100 : 200) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
+      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 100 : (width < 600 ? 350 : 200)) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
         <div className={styles.filter}>
           <h6>SIDE</h6>
           <Multiselect
