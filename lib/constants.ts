@@ -20,3 +20,9 @@ export type SchoolOption = {
   name: string;
   id: number;
 }
+
+export const highlightColors = [
+  'yellow',
+  'lime',
+  'aqua',
+];

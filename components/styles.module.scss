@@ -21,3 +21,22 @@
   font-family: inherit;
   min-width: 200px;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.highlight-select {
+  display: flex;
+  flex-direction: row;
+  margin-right: 10px;
+}
+
+.square {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-right: 5px;
+}

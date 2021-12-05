@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
 import { FaCopy } from 'react-icons/fa';
+import { AppContext } from '../../lib/appContext';
 import type { Card } from '../../lib/types';
 import { generateStyledCite, generateStyledParagraph } from '../../lib/utils';
 import DownloadLink from '../DownloadLink';
@@ -16,6 +17,7 @@ type CardProps = {
 const CardDetail = ({ card }: CardProps) => {
   const styledCite = generateStyledCite(card?.cite, card?.cite_emphasis);
   const container = useRef<HTMLDivElement>(null);
+  const { highlightColor } = useContext(AppContext);
 
   const copy = () => {
     if (container.current) {
@@ -58,7 +60,7 @@ const CardDetail = ({ card }: CardProps) => {
               dangerouslySetInnerHTML={{ __html: styledCite || '' }}
             />
             {card.body.map((paragraph, i) => {
-              const styledParagraph = generateStyledParagraph(card, i, paragraph, 'yellow');
+              const styledParagraph = generateStyledParagraph(card, i, paragraph, highlightColor);
 
               return (
                 <p className="MsoNormal"
