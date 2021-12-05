@@ -102,8 +102,8 @@ const QueryPage = () => {
   };
 
   const onSearch = async () => {
-    if (query && query.length > 0) {
-      updateUrl({ search: encodeURI(query) });
+    if (query && query.trim().length > 0) {
+      updateUrl({ search: encodeURI(query.trim()) });
     }
   };
 
@@ -223,7 +223,7 @@ const QueryPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="logo">
-        <Link href="/query" passHref><a><h1>Logos</h1></a></Link>
+        <Link href="/" passHref><a><h1>Logos</h1></a></Link>
         <FontSelect />
       </div>
       <div className="query-page">

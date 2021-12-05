@@ -9,7 +9,9 @@ const IndexPage = () => {
   const router = useRouter();
 
   const search = () => {
-    router.push(`/query?search=${query}`);
+    if (query.trim().length > 0) {
+      router.push(`/query?search=${query}`);
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
