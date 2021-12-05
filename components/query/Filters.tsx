@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import Multiselect from 'multiselect-react-dropdown';
@@ -7,6 +8,7 @@ import {
   sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
 } from '../../lib/constants';
 import * as apiService from '../../services/api';
+import useWindowSize from '../../lib/useWindowSize';
 
 type FiltersProps = {
   selectionRange: {
@@ -30,6 +32,7 @@ const Filters = ({
   selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, setSchools, schools, resetSchools,
 }: FiltersProps) => {
   const [isFiltersShown, setIsFiltersShown] = useState(false);
+  const { width } = useWindowSize();
 
   useEffect(() => {
     apiService.getSchools().then((schools) => {
@@ -71,22 +74,7 @@ const Filters = ({
   return (
     <>
       <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
-      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? 100 : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
-        <div className={`${styles.filter} ${styles['range-container']}`}>
-          <div className={styles['filter-row']}>
-            <h6 className={styles.range}>DATE</h6>
-            <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
-          </div>
-          <DateRangePicker
-            ranges={[selectionRange]}
-            onChange={handleSelect}
-            staticRanges={[]}
-            inputRanges={[]}
-            maxDate={new Date()}
-            minDate={new Date('01-01-1900')}
-            editableDateInputs
-          />
-        </div>
+      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 100 : 200) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
         <div className={styles.filter}>
           <h6>SIDE</h6>
           <Multiselect
@@ -148,6 +136,21 @@ const Filters = ({
             onRemove={onSchoolSelect}
             showCheckbox
             showArrow
+          />
+        </div>
+        <div className={`${styles.filter} ${styles['range-container']}`}>
+          <div className={styles['filter-row']}>
+            <h6 className={styles.range}>DATE</h6>
+            <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
+          </div>
+          <DateRangePicker
+            ranges={[selectionRange]}
+            onChange={handleSelect}
+            staticRanges={[]}
+            inputRanges={[]}
+            maxDate={new Date()}
+            minDate={new Date('01-01-1900')}
+            editableDateInputs
           />
         </div>
       </motion.div>

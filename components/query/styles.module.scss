@@ -205,3 +205,13 @@
     opacity: 0.5;
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .filters {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95vw;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
