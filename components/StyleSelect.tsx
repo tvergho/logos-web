@@ -1,18 +1,13 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useEffect, useState, useContext } from 'react';
-import { highlightColors } from '../lib/constants';
+import { highlightColors, fonts } from '../lib/constants';
 import { AppContext } from '../lib/appContext';
 import styles from './styles.module.scss';
 
-const fonts = [
-  'Calibri',
-  'Georgia',
-  'Arial',
-  'Helvetica',
-  'Times New Roman',
-];
-
-const FontSelect = () => {
+/**
+ * Allows the user to select a global font and highlighht color for displaying cards.
+ */
+const StyleSelect = () => {
   const [selectedFont, setSelectedFont] = useState(fonts[0]);
   const { highlightColor, setHighlightColor } = useContext(AppContext);
 
@@ -20,6 +15,7 @@ const FontSelect = () => {
     document.body.style.fontFamily = `${selectedFont}, sans-serif`;
   }, [selectedFont]);
 
+  // load from local storage on page load
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const color = window.localStorage.getItem('highlightColor');
@@ -73,4 +69,4 @@ const FontSelect = () => {
   );
 };
 
-export default FontSelect;
+export default StyleSelect;

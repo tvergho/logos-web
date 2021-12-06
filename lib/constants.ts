@@ -27,3 +27,11 @@ export const highlightColors = [
   'lime',
   'aqua',
 ];
+
+export const fonts = [
+  'Calibri',
+  'Georgia',
+  'Arial',
+  'Helvetica',
+  'Times New Roman',
+];

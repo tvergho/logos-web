@@ -19,6 +19,9 @@ const CardDetail = ({ card }: CardProps) => {
   const container = useRef<HTMLDivElement>(null);
   const { highlightColor } = useContext(AppContext);
 
+  /**
+   * Programatically copy the content of the card to the clipboard.
+   */
   const copy = () => {
     if (container.current) {
       window.getSelection()?.removeAllRanges();

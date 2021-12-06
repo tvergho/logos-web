@@ -5,7 +5,7 @@ import { RangeKeyDict } from 'react-date-range';
 import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import FontSelect from '../components/FontSelect';
+import StyleSelect from '../components/StyleSelect';
 import {
   InputBox, SearchResults, CardDetail, Filters,
 } from '../components/query';
@@ -16,13 +16,13 @@ import {
 } from '../lib/constants';
 
 const QueryPage = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Array<SearchResult>>([]);
-  const [cards, setCards] = useState<Record<string, any>>({});
+  const [query, setQuery] = useState(''); // current user input in the search box
+  const [results, setResults] = useState<Array<SearchResult>>([]); // results returned from the search API
+  const [cards, setCards] = useState<Record<string, any>>({}); // map of IDs to currently retrieved cards
   const [selectedCard, setSelectedCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [scrollCursor, setScrollCursor] = useState(0);
-  const [schools, setSchools] = useState<Array<SchoolOption>>([]);
+  const [schools, setSchools] = useState<Array<SchoolOption>>([]); // list of schoools returned from the API
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
@@ -30,6 +30,7 @@ const QueryPage = () => {
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
 
+  // set the initial value of the filters based on the URL
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
   const urlSelectedDivision = divisionOptions.filter((division) => { return !exclude_division?.includes(division.value); });
   const urlSelectedYears = yearOptions.filter((year) => { return !exclude_years?.includes(year.name); });
@@ -41,6 +42,10 @@ const QueryPage = () => {
     key: 'selection',
   });
 
+  /**
+    * Updates the specified fields or remove them from the URL.
+    * Will trigger a new search if the query is different from the last query.
+    */
   const updateUrl = (params: {[key: string]: string | undefined}, reset?: string[]) => {
     const query: Record<string, string> = {
       ...(params.search || urlSearch) && { search: params.search ? params.search : urlSearch as string },
@@ -60,6 +65,9 @@ const QueryPage = () => {
     });
   };
 
+  /**
+    * Updates the date range and triggers a new search.
+    */
   const handleSelect = (ranges: RangeKeyDict) => {
     if (urlSearch) {
       if ((ranges.selection.endDate?.getTime() || 0) - (ranges.selection.startDate?.getTime() || 0) !== 0) {
@@ -107,6 +115,12 @@ const QueryPage = () => {
     }
   };
 
+  /**
+   * Initiates a new search with the current query, date range, and other query parameters from the API.
+   * @param query The query to search for.
+   * @param c The cursor to use for pagination.
+   * @param replaceResults Whether to replace the current results with the new results.
+   */
   const searchRequest = (query: string, c: number, replaceResults: boolean) => {
     const q = {
       query,
@@ -148,12 +162,15 @@ const QueryPage = () => {
     }
   };
 
+  // triggered for any changes in the URL
   useEffect(() => {
+    // initiates a new search if the query exists
     if (urlSearch && urlSearch.length > 0) {
       setQuery(decodeURI(urlSearch as string));
       searchRequest(decodeURI(urlSearch as string), 0, true);
     }
 
+    // update the date range based on changes to the URL
     if (start_date && end_date) {
       const start = new Date(start_date as string);
       const end = new Date(end_date as string);
@@ -224,7 +241,7 @@ const QueryPage = () => {
       </Head>
       <div className="logo">
         <Link href="/" passHref><a><h1>Logos</h1></a></Link>
-        <FontSelect />
+        <StyleSelect />
       </div>
       <div className="query-page">
         <div className="page-row">
