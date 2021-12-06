@@ -255,6 +255,8 @@ const QueryPage = () => {
   const onCiteSearch = (citeSearch: string) => {
     if (citeSearch.length > 0) {
       updateUrl({ cite_match: citeSearch, search: query });
+    } else {
+      updateUrl({}, ['cite_search']);
     }
   };
 
