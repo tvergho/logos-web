@@ -42,7 +42,6 @@ const QueryPage = () => {
   });
 
   const updateUrl = (params: {[key: string]: string | undefined}, reset?: string[]) => {
-    console.log('update', params);
     const query: Record<string, string> = {
       ...(params.search || urlSearch) && { search: params.search ? params.search : urlSearch as string },
       ...(params.start_date || start_date) && { start_date: params.start_date ? params.start_date : start_date as string },
