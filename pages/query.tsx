@@ -17,6 +17,7 @@ import {
 
 const QueryPage = () => {
   const [query, setQuery] = useState(''); // current user input in the search box
+  const [citeSearch, setCiteSearch] = useState(''); // current user input in the cite box
   const [results, setResults] = useState<Array<SearchResult>>([]); // results returned from the search API
   const [cards, setCards] = useState<Record<string, any>>({}); // map of IDs to currently retrieved cards
   const [selectedCard, setSelectedCard] = useState('');
@@ -185,6 +186,10 @@ const QueryPage = () => {
       searchRequest(decodeURI(urlSearch as string || ''), 0, true);
     }
 
+    if (cite_match) {
+      setCiteSearch(cite_match as string);
+    }
+
     // update the date range based on changes to the URL
     if (start_date && end_date) {
       const start = new Date(start_date as string);
@@ -249,7 +254,7 @@ const QueryPage = () => {
 
   const onCiteSearch = (citeSearch: string) => {
     if (citeSearch.length > 0) {
-      updateUrl({ cite_match: citeSearch });
+      updateUrl({ cite_match: citeSearch, search: query });
     }
   };
 
@@ -266,7 +271,15 @@ const QueryPage = () => {
       </div>
       <div className="query-page">
         <div className="page-row">
-          <InputBox value={query} onChange={setQuery} onSearch={onSearch} loading={loading} onCiteSearch={onCiteSearch} />
+          <InputBox
+            value={query}
+            onChange={setQuery}
+            onSearch={onSearch}
+            loading={loading}
+            onCiteSearch={onCiteSearch}
+            onCiteChange={setCiteSearch}
+            citeValue={citeSearch}
+          />
           <Filters
             selectionRange={dateRange}
             handleSelect={handleSelect}

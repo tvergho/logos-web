@@ -5,6 +5,8 @@ import styles from './styles.module.scss';
 
 type InputBoxProps = {
   onChange: (value: string) => void;
+  onCiteChange: (value: string) => void;
+  citeValue: string;
   value: string;
   onSearch: () => void;
   loading: boolean;
@@ -23,7 +25,7 @@ declare global {
 }
 
 const InputBox = ({
-  value, onChange, onSearch, loading, onCiteSearch,
+  value, onChange, onSearch, loading, onCiteSearch, citeValue, onCiteChange,
 }: InputBoxProps) => {
   const [isAdvancedSearchShown, setIsAdvancedSearchShown] = useState(false);
 
@@ -60,7 +62,7 @@ const InputBox = ({
 
       <button className={styles['advanced-button']} type="button" onClick={() => setIsAdvancedSearchShown((i) => !i)}>Advanced Search</button>
       <motion.div className={styles.advanced} animate={{ height: isAdvancedSearchShown ? '100%' : '0px' }}>
-        <input placeholder="Search by cite..." className={styles['advanced-cite']} onKeyDown={onCiteKeyDown} />
+        <input placeholder="Search by cite..." className={styles['advanced-cite']} onKeyDown={onCiteKeyDown} value={citeValue} onChange={(e) => onCiteChange(e.target.value)} />
       </motion.div>
 
       <div className={styles.loading}>
