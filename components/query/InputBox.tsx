@@ -9,6 +9,8 @@ type InputBoxProps = {
   loading: boolean;
 };
 
+// provides native JSX support for the dotlottie player element
+// avoids annoying typescript warnings
 declare global {
   namespace JSX {
       interface IntrinsicElements {
@@ -28,6 +30,7 @@ const InputBox = ({
   };
 
   useEffect(() => {
+    // throws errors if not initialized after the page has first loaded
     require('@dotlottie/player-component');
   }, []);
 

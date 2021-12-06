@@ -7,7 +7,6 @@ import styles from './styles.module.scss';
 import {
   sideOptions, SideOption, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
 } from '../../lib/constants';
-import * as apiService from '../../services/api';
 import useWindowSize from '../../lib/useWindowSize';
 
 type FiltersProps = {
@@ -24,23 +23,19 @@ type FiltersProps = {
   onDivisionSelect: (selected: DivisionOption[]) => void,
   onYearSelect: (selected: YearOption[]) => void,
   onSchoolSelect: (selected: SchoolOption[]) => void,
-  setSchools: (schools: SchoolOption[]) => void,
   schools: SchoolOption[],
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, setSchools, schools, resetSchools,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, schools, resetSchools,
 }: FiltersProps) => {
   const [isFiltersShown, setIsFiltersShown] = useState(false);
   const { width } = useWindowSize();
 
-  useEffect(() => {
-    apiService.getSchools().then((schools) => {
-      const { colleges } = schools;
-      setSchools(colleges.map((college: string, i: number) => ({ name: college, id: i })));
-    });
-  }, []);
-
+  /**
+   * Toggle visibility of the calendar element programatically (since the package doesn't support this functionality natively).
+   * On click handler tied to the start and end date inputs.
+   */
   const toggleCalendar = (e?: MouseEvent, off?: boolean) => {
     const elements = document.getElementsByClassName('rdrMonthsVertical') as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < elements.length; i += 1) {

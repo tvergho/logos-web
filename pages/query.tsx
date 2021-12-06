@@ -43,6 +43,16 @@ const QueryPage = () => {
   });
 
   /**
+   * Load the list of schools from the API on page load.
+   */
+  useEffect(() => {
+    apiService.getSchools().then((schools) => {
+      const { colleges } = schools;
+      setSchools(colleges.map((college: string, i: number) => ({ name: college, id: i })));
+    });
+  }, []);
+
+  /**
     * Updates the specified fields or remove them from the URL.
     * Will trigger a new search if the query is different from the last query.
     */
@@ -257,7 +267,6 @@ const QueryPage = () => {
             onDivisionSelect={onDivisionSelect}
             onYearSelect={onYearSelect}
             onSchoolSelect={onSchoolSelect}
-            setSchools={setSchools}
             schools={schools}
             resetSchools={resetSchools}
           />

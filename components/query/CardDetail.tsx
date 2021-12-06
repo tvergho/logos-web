@@ -53,15 +53,18 @@ const CardDetail = ({ card }: CardProps) => {
               ><FaCopy color="rgba(0,0,0,0.4)" size={20} />
               </button>
             </div>
+
             {!!card.tag_sub && (
               <p className="MsoNormal" style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }}>{card.tag_sub}</p>
             )}
+
             <p className="MsoNormal"
               style={{
                 fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
               }}
               dangerouslySetInnerHTML={{ __html: styledCite || '' }}
             />
+
             {card.body.map((paragraph, i) => {
               const styledParagraph = generateStyledParagraph(card, i, paragraph, highlightColor);
 

@@ -29,12 +29,15 @@ const SearchResults = ({
   const { width } = useWindowSize();
   const cache = useRef(new CellMeasurerCache({
     fixedWidth: true,
-    defaultWidth: width * 0.35,
+    defaultWidth: width * 0.35, // this is linked to a hardcoded value in the CSS
     defaultHeight: 80,
   }));
   const loader = useRef<InfiniteLoader>(null);
   const [requested, setRequested] = useState<Record<string, any>>({});
 
+  // filter the list by string similarity to avoid showing duplicate cards
+  // successive cards with a combined tag + cite similarity of 0.8 or greater compared with any other previous card
+  // will not be shown in the final set of search results
   const filteredResults = useMemo<Array<SearchResult>>(() => {
     return results.reduce<Array<SearchResult>>((acc, result) => {
       const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.8; });
@@ -61,6 +64,9 @@ const SearchResults = ({
   }) => {
     const result = filteredResults[index];
 
+    // largely deprecated
+    // in previous versions of the app, this would load the first couple lines of the card body early
+    // if the tag was cut off early and the cite didn't contain cite info
     if (!cards[result.id] && !/\d/.test(result.cite) && !requested[result.id]) {
       getCard(result.id).then(() => {
         cache.current.clear(index, 0);
