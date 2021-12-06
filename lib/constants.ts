@@ -13,6 +13,7 @@ export type DivisionOption = typeof divisionOptions[number];
 export const yearOptions = [
   { name: '21-22', id: 1 },
   { name: '20-21', id: 2 },
+  { name: '19-20', id: 3 },
 ];
 export type YearOption = typeof yearOptions[number];
 
