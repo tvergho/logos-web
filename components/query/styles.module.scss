@@ -41,7 +41,7 @@
 }
 
 .loading {
-  height: 30px;
+  height: 10px;
 }
 
 .results {
@@ -62,6 +62,7 @@
   border-radius: 5px;
   margin-left: -10px;
   min-height: 80px;
+  outline: 0;
 
   &:hover {
     background-color: rgba(235,235,235);
@@ -205,6 +206,48 @@
   }
   &:active {
     opacity: 0.5;
+  }
+}
+
+.advanced-button {
+  outline: 0;
+  background: 0;
+  border: 0;
+  transition: all 0.3s;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  color: $dark-green;
+  margin: 10px 0;
+
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.advanced {
+  overflow: hidden;
+  height: 0px;
+}
+
+.advanced-cite {
+  padding: 3px 5px;
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+  font-family: inherit;
+  padding-top: 5px;
+  border: 0.5px solid rgba(0,0,0,0.2);
+  border-radius: 5px;
+  outline: 0;
+
+  &::placeholder {
+    color: rgba(0,0,0,0.4);
+  }
+  &:focus::placeholder {
+    color: transparent;
   }
 }
 

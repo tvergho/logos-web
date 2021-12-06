@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import styles from './styles.module.scss';
 
 type InputBoxProps = {
@@ -7,6 +8,7 @@ type InputBoxProps = {
   value: string;
   onSearch: () => void;
   loading: boolean;
+  onCiteSearch: (s: string) => void;
 };
 
 // provides native JSX support for the dotlottie player element
@@ -21,11 +23,19 @@ declare global {
 }
 
 const InputBox = ({
-  value, onChange, onSearch, loading,
+  value, onChange, onSearch, loading, onCiteSearch,
 }: InputBoxProps) => {
+  const [isAdvancedSearchShown, setIsAdvancedSearchShown] = useState(false);
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onSearch();
+    }
+  };
+
+  const onCiteKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onCiteSearch(e.currentTarget.value);
     }
   };
 
@@ -47,6 +57,11 @@ const InputBox = ({
         />
         <button className={styles.button} type="button" onClick={onSearch}>Submit</button>
       </div>
+
+      <button className={styles['advanced-button']} type="button" onClick={() => setIsAdvancedSearchShown((i) => !i)}>Advanced Search</button>
+      <motion.div className={styles.advanced} animate={{ height: isAdvancedSearchShown ? '100%' : '0px' }}>
+        <input placeholder="Search by cite..." className={styles['advanced-cite']} onKeyDown={onCiteKeyDown} />
+      </motion.div>
 
       <div className={styles.loading}>
         {loading && typeof window !== 'undefined' && (

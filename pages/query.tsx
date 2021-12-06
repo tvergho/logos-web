@@ -26,7 +26,7 @@ const QueryPage = () => {
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
 
@@ -65,6 +65,7 @@ const QueryPage = () => {
       ...(params.exclude_division || exclude_division) && { exclude_division: params.exclude_division ? params.exclude_division : exclude_division as string },
       ...(params.exclude_years || exclude_years) && { exclude_years: params.exclude_years ? params.exclude_years : exclude_years as string },
       ...(params.exclude_schools || exclude_schools) && { exclude_schools: params.exclude_schools ? params.exclude_schools : exclude_schools as string },
+      ...(params.cite_match || cite_match) && { cite_match: params.cite_match ? params.cite_match : cite_match as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -120,8 +121,10 @@ const QueryPage = () => {
   };
 
   const onSearch = async () => {
-    if (query && query.trim().length > 0) {
+    if (query) {
       updateUrl({ search: encodeURI(query.trim()) });
+    } else if (query === '') {
+      updateUrl({}, ['search']);
     }
   };
 
@@ -131,7 +134,7 @@ const QueryPage = () => {
    * @param c The cursor to use for pagination.
    * @param replaceResults Whether to replace the current results with the new results.
    */
-  const searchRequest = (query: string, c: number, replaceResults: boolean) => {
+  const searchRequest = (query = '', c = 0, replaceResults = false) => {
     const q = {
       query,
       cursor: c,
@@ -141,6 +144,7 @@ const QueryPage = () => {
       ...(exclude_division) && { exclude_division },
       ...(exclude_years) && { exclude_years },
       ...(exclude_schools) && { exclude_schools },
+      ...(cite_match) && { cite_match },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
@@ -152,6 +156,7 @@ const QueryPage = () => {
         ...(exclude_division) && { exclude_division },
         ...(exclude_years) && { exclude_years },
         ...(exclude_schools) && { exclude_schools },
+        ...(cite_match) && { cite_match },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -167,17 +172,17 @@ const QueryPage = () => {
   };
 
   const loadMore = async () => {
-    if (urlSearch && urlSearch.length > 0) {
-      searchRequest(decodeURI(urlSearch as string), scrollCursor, false);
+    if ((urlSearch && urlSearch.length > 0) || cite_match) {
+      searchRequest(decodeURI(urlSearch as string || ''), scrollCursor, false);
     }
   };
 
   // triggered for any changes in the URL
   useEffect(() => {
     // initiates a new search if the query exists
-    if (urlSearch && urlSearch.length > 0) {
-      setQuery(decodeURI(urlSearch as string));
-      searchRequest(decodeURI(urlSearch as string), 0, true);
+    if ((urlSearch && urlSearch.length > 0) || cite_match) {
+      setQuery(decodeURI(urlSearch as string || ''));
+      searchRequest(decodeURI(urlSearch as string || ''), 0, true);
     }
 
     // update the date range based on changes to the URL
@@ -242,6 +247,12 @@ const QueryPage = () => {
     }
   };
 
+  const onCiteSearch = (citeSearch: string) => {
+    if (citeSearch.length > 0) {
+      updateUrl({ cite_match: citeSearch });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -255,7 +266,7 @@ const QueryPage = () => {
       </div>
       <div className="query-page">
         <div className="page-row">
-          <InputBox value={query} onChange={setQuery} onSearch={onSearch} loading={loading} />
+          <InputBox value={query} onChange={setQuery} onSearch={onSearch} loading={loading} onCiteSearch={onCiteSearch} />
           <Filters
             selectionRange={dateRange}
             handleSelect={handleSelect}
