@@ -10,7 +10,7 @@ const IndexPage = () => {
 
   const search = () => {
     if (query.trim().length > 0) {
-      router.push(`/query?search=${query}`);
+      router.push(`/query?search=${encodeURI(query)}`);
     }
   };
 
