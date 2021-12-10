@@ -5,6 +5,7 @@ import { RangeKeyDict } from 'react-date-range';
 import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import mixpanel from 'mixpanel-browser';
 import StyleSelect from '../components/StyleSelect';
 import {
   InputBox, SearchResults, CardDetail, Filters,
@@ -53,6 +54,12 @@ const QueryPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    mixpanel.track('Page View', {
+      page: 'Home',
+    });
+  }, []);
+
   /**
     * Updates the specified fields or remove them from the URL.
     * Will trigger a new search if the query is different from the last query.
@@ -75,6 +82,7 @@ const QueryPage = () => {
       pathname: '/query',
       query,
     });
+    mixpanel.track('Search', query);
   };
 
   /**

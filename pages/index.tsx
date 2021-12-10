@@ -1,12 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import mixpanel from 'mixpanel-browser';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/index.module.scss';
 
 const IndexPage = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    mixpanel.track('Page View', {
+      page: 'Home',
+    });
+  }, []);
 
   const search = () => {
     if (query.trim().length > 0) {
