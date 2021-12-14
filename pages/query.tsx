@@ -238,7 +238,7 @@ const QueryPage = () => {
 
   const onDivisionSelect = (divisions: DivisionOption[]) => {
     if (divisions.length === 1) {
-      updateUrl({ exclude_division: divisionOptions.filter((opt) => !divisions.find((div) => div.value === opt.value)).map((opt) => opt.value).join('') });
+      updateUrl({ exclude_division: divisionOptions.filter((opt) => !divisions.find((div) => div.value === opt.value)).map((opt) => opt.value).join(',') });
     } else if (divisions.length === 2) {
       updateUrl({}, ['exclude_division']);
     }
