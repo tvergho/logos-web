@@ -79,7 +79,7 @@ const Filters = ({
   return (
     <>
       <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
-      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 100 : (width < 600 ? 350 : 200)) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
+      <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 130 : (width < 600 ? 350 : 200)) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
         <div className={styles.filter}>
           <h6>SIDE</h6>
           <Multiselect
