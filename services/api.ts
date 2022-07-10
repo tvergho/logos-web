@@ -21,7 +21,6 @@ export const getSchools = async () => {
   return response.data;
 };
 
-export const getToken = async (code: string, redirect_uri: string): Promise<{access_token: string, refresh_token: string}> => {
-  const response = await axios.get(`${apiUrl}/token?code=${code}&redirect_uri=${redirect_uri}`);
-  return response.data.access_token;
+export const createUser = async (accessToken: string) => {
+  await axios.post(`${apiUrl}/create-user`, {}, { headers: { Authorization: `Bearer ${accessToken}` } });
 };
