@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { IncomingHttpHeaders } from 'http';
 import type { Card } from './types';
 
 export const generateStyledCite = (cite?: string, cite_emphasis: Array<[number, number]> = [], fontSize = 13) => {
@@ -38,4 +39,9 @@ export const generateStyledParagraph = (card: Card, i: number, paragraph: string
 
   const styledParagraph = paragraph.replace(/(?:)/g, (_, index) => obj[index] || '');
   return styledParagraph;
+};
+
+export const getRedirectUriFromHeaders = (headers: IncomingHttpHeaders) => {
+  const redirectUriSuffix = 'auth-redirect';
+  return `${headers['x-forwarded-proto'] ? 'https://' : 'http://'}${headers.host}/${redirectUriSuffix}`;
 };

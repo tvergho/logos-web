@@ -20,3 +20,8 @@ export const getSchools = async () => {
   const response = await axios.get(`${apiUrl}/schools`);
   return response.data;
 };
+
+export const getToken = async (code: string, redirect_uri: string): Promise<{access_token: string, refresh_token: string}> => {
+  const response = await axios.get(`${apiUrl}/token?code=${code}&redirect_uri=${redirect_uri}`);
+  return response.data.access_token;
+};
