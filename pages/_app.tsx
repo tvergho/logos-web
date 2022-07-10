@@ -7,7 +7,7 @@ import mixpanel from 'mixpanel-browser';
 import type { AppProps } from 'next/app';
 import { AppContext, defaultState } from '../lib/appContext';
 
-mixpanel.init('56d6fdbf99f733091a091732d5b4654d');
+mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY || '');
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [highlightColor, setHighlightColor] = useState<string>(defaultState.highlightColor);

@@ -15,6 +15,7 @@
     "@types/react-virtualized": "^9.21.15",
     "axios": "^0.24.0",
     "date-fns": "^2.27.0",
+    "dropbox": "^10.31.0",
     "framer-motion": "^5.3.3",
     "lottie-react": "^2.1.0",
     "mixpanel-browser": "^2.42.0",
