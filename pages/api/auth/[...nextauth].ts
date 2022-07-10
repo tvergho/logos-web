@@ -2,6 +2,7 @@
 /* eslint-disable new-cap */
 import NextAuth, { User } from 'next-auth';
 import DropboxProvider from 'next-auth/providers/dropbox';
+import { createUser } from '../../../services/api';
 
 type Token = {
   accessToken?: string | undefined;
@@ -63,6 +64,9 @@ export default NextAuth({
           refreshToken: account.refresh_token,
           user,
         };
+
+        if (account.access_token && account.refresh_token) createUser(account.access_token, account.refresh_token);
+
         return token;
       }
 

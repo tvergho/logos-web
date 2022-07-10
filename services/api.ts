@@ -21,6 +21,6 @@ export const getSchools = async () => {
   return response.data;
 };
 
-export const createUser = async (accessToken: string) => {
-  await axios.post(`${apiUrl}/create-user`, {}, { headers: { Authorization: `Bearer ${accessToken}` } });
+export const createUser = async (accessToken: string, refreshToken: string) => {
+  await axios.post(`${apiUrl}/create-user`, { refresh_token: refreshToken }, { headers: { Authorization: `Bearer ${accessToken}` } });
 };

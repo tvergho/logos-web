@@ -1,12 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import mixpanel from 'mixpanel-browser';
-import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ConnectDropboxButton from '../components/dropbox/ConnectDropboxButton';
 import styles from '../styles/index.module.scss';
-import { getRedirectUriFromHeaders } from '../lib/utils';
 
 const IndexPage = () => {
   const [query, setQuery] = useState('');
