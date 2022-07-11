@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import mixpanel from 'mixpanel-browser';
+import { useSession } from 'next-auth/react';
 import StyleSelect from '../components/StyleSelect';
 import {
   InputBox, SearchResults, CardDetail, Filters,
@@ -43,6 +44,8 @@ const QueryPage = () => {
     endDate: new Date(),
     key: 'selection',
   });
+
+  const { data: session, status } = useSession();
 
   /**
    * Load the list of schools from the API on page load.
@@ -166,6 +169,7 @@ const QueryPage = () => {
         ...(exclude_years) && { exclude_years },
         ...(exclude_schools) && { exclude_schools },
         ...(cite_match) && { cite_match },
+        ...!!(session && session.accessToken) && { access_token: session.accessToken },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -189,7 +193,7 @@ const QueryPage = () => {
   // triggered for any changes in the URL
   useEffect(() => {
     // initiates a new search if the query exists
-    if ((urlSearch && urlSearch.length > 0) || cite_match) {
+    if (status !== 'loading' && ((urlSearch && urlSearch.length > 0) || cite_match)) {
       setQuery(decodeURI(urlSearch as string || ''));
       searchRequest(decodeURI(urlSearch as string || ''), 0, true);
     }
@@ -213,7 +217,7 @@ const QueryPage = () => {
         };
       });
     }
-  }, [routerQuery]);
+  }, [routerQuery, status]);
 
   const getCard = async (id: string) => {
     if (!cards[id]) {

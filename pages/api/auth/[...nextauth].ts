@@ -78,5 +78,10 @@ export default NextAuth({
       // Access token has expired, try to update it
       return refreshAccessToken(token as Token);
     },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken;
+      return session;
+    },
   },
 });

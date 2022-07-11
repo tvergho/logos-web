@@ -7,6 +7,7 @@ export const search = async (query: string, cursor = 0, additionalParams = {}) =
   Object.entries(additionalParams).forEach(([key, value]) => {
     url += `&${key}=${value}`;
   });
+
   const response = await axios.get(url);
   return { results: response.data.results, cursor: response.data.cursor };
 };
