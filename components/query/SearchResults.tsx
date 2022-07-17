@@ -40,7 +40,7 @@ const SearchResults = ({
   // will not be shown in the final set of search results
   const filteredResults = useMemo<Array<SearchResult>>(() => {
     return results.reduce<Array<SearchResult>>((acc, result) => {
-      const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.8; });
+      const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.95; });
       if (!hasSimilarMatch) {
         return [...acc, result];
       }
