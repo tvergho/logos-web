@@ -17,20 +17,23 @@ async function refreshAccessToken(token: Token) {
     const url = 'https://api.dropboxapi.com/oauth2/token';
     const headers = new Headers();
 
-    headers.append('Authorization', `Basic${Buffer.from(`${process.env.DROPBOX_ID}:${process.env.DROPBOX_SECRET}`, 'base64')}`);
+    headers.append('Authorization', `Basic ${Buffer.from(`${process.env.DROPBOX_ID}:${process.env.DROPBOX_SECRET}`).toString('base64')}`);
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
     const response = await fetch(url, {
       headers,
       method: 'POST',
-      body: JSON.stringify({
+      body: new URLSearchParams({
         grant_type: 'refresh_token',
-        refresh_token: token.refreshToken,
+        refresh_token: token.refreshToken || '',
       }),
     });
 
-    const { access_token, expires_in } = await response.json();
+    const json = await response.json();
+    const { access_token, expires_in } = json;
 
     if (!response.ok) {
+      console.log(json);
       throw response;
     }
 
@@ -39,7 +42,7 @@ async function refreshAccessToken(token: Token) {
       accessToken: access_token,
       accessTokenExpires: Date.now() + expires_in * 1000,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       ...token,
       error: 'RefreshAccessTokenError',
