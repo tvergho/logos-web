@@ -1,11 +1,21 @@
 import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 
 const ConnectDropboxButton = () => {
-  const { data: session } = useSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: session, status } = useSession();
 
-  if (session) {
+  useEffect(() => {
+    if (status === 'authenticated' || session) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [session, status]);
+
+  if (isAuthenticated) {
     return (
       <button className={styles.connect} type="button" onClick={() => { signOut({ redirect: false }); }}>
         <p>Sign out</p>
