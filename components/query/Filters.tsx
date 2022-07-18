@@ -100,12 +100,14 @@ const Filters = ({
             options={divisionOptions}
             displayValue="name"
             selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
-            style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
+            style={{ multiselectContainer: { width: 200 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
             hidePlaceholder
             emptyRecordMsg=""
             placeholder=""
             onSelect={onDivisionSelect}
             onRemove={onDivisionSelect}
+            showCheckbox
+            showArrow
           />
         </div>
         <div className={styles.filter}>
