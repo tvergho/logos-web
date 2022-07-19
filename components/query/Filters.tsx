@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
@@ -24,10 +25,11 @@ type FiltersProps = {
   onYearSelect: (selected: YearOption[]) => void,
   onSchoolSelect: (selected: SchoolOption[]) => void,
   schools: SchoolOption[],
+  togglePersonal: () => void
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, schools, resetSchools,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, schools, resetSchools, togglePersonal,
 }: FiltersProps) => {
   const [isFiltersShown, setIsFiltersShown] = useState(false);
   const { width } = useWindowSize();
@@ -157,6 +159,11 @@ const Filters = ({
             inputRanges={[]}
             editableDateInputs
           />
+        </div>
+
+        <div className={styles.personal}>
+          <label htmlFor="personal_only">Show personal cards only</label>
+          <input type="checkbox" id="personal_only" name="personal_only" onClick={togglePersonal} />
         </div>
       </motion.div>
     </>

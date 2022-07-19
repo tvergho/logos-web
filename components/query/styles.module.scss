@@ -124,6 +124,23 @@
   }
 }
 
+.personal {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    margin-right: 5px;
+    color: rgba(0,0,0,0.6);
+    font-weight: 300;
+    font-size: 14px;
+  }
+}
+
 .filter-prompt {
   font-size: 16px;
   font-weight: 300;
