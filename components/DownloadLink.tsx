@@ -2,7 +2,7 @@ import styles from './styles.module.scss';
 
 type DownloadLinkProps = {
   className?: string;
-  url?: string;
+  url?: string | string[];
 }
 /**
  * Converts a wiki download link to a filename, and renders a link for download.
@@ -12,10 +12,16 @@ type DownloadLinkProps = {
 const DownloadLink = ({ url, className = '' }: DownloadLinkProps) => {
   if (!url) return null;
 
+  const urls = Array.isArray(url) ? url : [url];
+
   return (
-    <a href={url || '#'} className={`${styles.filename} ${className}`} target="_blank" rel="noreferrer">
-      {url.split('/')[url.split('/').length - 1].split('?')[0]}
-    </a>
+    <>
+      {urls.map((url) => (
+        <a href={url || '#'} className={`${styles.filename} ${className}`} target="_blank" rel="noreferrer" key={url}>
+          {url.split('/')[url.split('/').length - 1].split('?')[0]}
+        </a>
+      ))}
+    </>
   );
 };
 

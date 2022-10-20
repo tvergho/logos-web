@@ -12,9 +12,10 @@ import styles from './styles.module.scss';
 
 type CardProps = {
   card?: Card;
+  downloadUrls?: string[];
 }
 
-const CardDetail = ({ card }: CardProps) => {
+const CardDetail = ({ card, downloadUrls }: CardProps) => {
   const styledCite = generateStyledCite(card?.cite, card?.cite_emphasis);
   const container = useRef<HTMLDivElement>(null);
   const { highlightColor } = useContext(AppContext);
@@ -78,7 +79,7 @@ const CardDetail = ({ card }: CardProps) => {
             })}
           </div>
           <div className={styles.download}>
-            <DownloadLink url={card.download_url || card.s3_url} />
+            <DownloadLink url={downloadUrls || card.download_url || card.s3_url} />
           </div>
         </>
       )}

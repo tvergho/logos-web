@@ -5,7 +5,7 @@ export type SearchResult = {
   s3_url?: string;
   tag: string;
   year?: string;
-  download_url?: string;
+  download_url?: string | string[];
   cite_emphasis?: [[number, number]];
 }
 

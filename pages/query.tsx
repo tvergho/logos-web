@@ -32,6 +32,7 @@ const QueryPage = () => {
     search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match, personal_only,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
+  const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
 
   // set the initial value of the filters based on the URL
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
@@ -329,8 +330,9 @@ const QueryPage = () => {
             cards={cards}
             getCard={getCard}
             loadMore={loadMore}
+            setDownloadUrls={setDownloadUrls}
           />
-          <CardDetail card={cards[selectedCard]} />
+          <CardDetail card={cards[selectedCard]} downloadUrls={downloadUrls} />
         </div>
       </div>
     </>
