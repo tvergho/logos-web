@@ -13,10 +13,11 @@ const DownloadLink = ({ url, className = '' }: DownloadLinkProps) => {
   if (!url) return null;
 
   const urls = Array.isArray(url) ? url : [url];
+  const uniqueUrls = urls.filter((url, index) => urls.indexOf(url) === index);
 
   return (
     <>
-      {urls.map((url) => (
+      {uniqueUrls.map((url) => (
         <a href={url || '#'} className={`${styles.filename} ${className}`} target="_blank" rel="noreferrer" key={url}>
           {url.split('/')[url.split('/').length - 1].split('?')[0]}
         </a>

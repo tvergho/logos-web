@@ -37,7 +37,7 @@ const SearchResults = ({
   const [requested, setRequested] = useState<Record<string, any>>({});
 
   // filter the list by string similarity to avoid showing duplicate cards
-  // successive cards with a combined tag + cite similarity of 0.8 or greater compared with any other previous card
+  // successive cards with a combined tag + cite similarity of 0.95 or greater compared with any other previous card
   // will not be shown in the final set of search results
   const filteredResults = useMemo<Array<SearchResult>>(() => {
     return results.reduce<Array<SearchResult>>((acc, result) => {
@@ -67,7 +67,7 @@ const SearchResults = ({
   useEffect(() => {
     loader.current?.resetLoadMoreRowsCache();
     cache.current.clearAll();
-  }, [results[0], width]);
+  }, [results[0], width, filteredResults]);
 
   const rowRenderer: ListRowRenderer = ({
     index, parent, key, style,
