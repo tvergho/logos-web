@@ -36,12 +36,13 @@ const IndexPage = () => {
       </Head>
       <div className={styles.container}>
         <h1 className={styles.logo}>LOGOS</h1>
-        <h2 className={styles.subtitle}>a debate search platform</h2>
+        <h2 className={styles.subtitle}>The platform has been disabled for the moment for maintenance and upgrades. We hope to be back soon!</h2>
+        {/* <h2 className={styles.subtitle}>a debate search platform</h2>
 
         <div className={styles.row}>
           <input onKeyDown={onKeyDown} className={styles.search} placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} />
           <button type="button" className={styles.submit} onClick={search}>Submit</button>
-        </div>
+        </div> */}
       </div>
     </>
   );
