@@ -165,8 +165,8 @@ const QueryPage = () => {
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
       setLoading(true);
       apiService.search(query, c, {
-        ...(start_date) && { start_date },
-        ...(end_date) && { end_date },
+        ...(start_date) && { start_date: Math.floor(new Date(start_date as string).getTime() / 1000) },
+        ...(end_date) && { end_date: Math.floor(new Date(end_date as string).getTime() / 1000) },
         ...(exclude_sides) && { exclude_sides },
         ...(exclude_division) && { exclude_division },
         ...(exclude_years) && { exclude_years },

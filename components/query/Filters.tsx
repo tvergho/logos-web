@@ -82,7 +82,7 @@ const Filters = ({
     <>
       <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
       <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 130 : (width < 600 ? 350 : 200)) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
-        <div className={styles.filter}>
+        {/* <div className={styles.filter}>
           <h6>SIDE</h6>
           <Multiselect
             options={sideOptions}
@@ -95,7 +95,7 @@ const Filters = ({
             onSelect={onSideSelect}
             onRemove={onSideSelect}
           />
-        </div>
+  </div> */}
         <div className={styles.filter}>
           <h6>DIVISION</h6>
           <Multiselect
@@ -147,7 +147,7 @@ const Filters = ({
             showArrow
           />
         </div>
-        <div className={`${styles.filter} ${styles['range-container']}`}>
+        {/* <div className={`${styles.filter} ${styles['range-container']}`}>
           <div className={styles['filter-row']}>
             <h6 className={styles.range}>DATE</h6>
             <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
@@ -159,7 +159,7 @@ const Filters = ({
             inputRanges={[]}
             editableDateInputs
           />
-        </div>
+  </div> */}
 
         <div className={styles.personal}>
           <label htmlFor="personal_only">Show personal cards only</label>
