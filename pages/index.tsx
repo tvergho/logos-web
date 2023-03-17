@@ -4,11 +4,13 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ConnectDropboxButton from '../components/dropbox/ConnectDropboxButton';
+import { useIsAuthenticated } from '../lib/hooks';
 import styles from '../styles/index.module.scss';
 
 const IndexPage = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     mixpanel.track('Page View', {
@@ -41,10 +43,12 @@ const IndexPage = () => {
         <h1 className={styles.logo}>LOGOS</h1>
         <h2 className={styles.subtitle}>a debate search platform</h2>
 
-        <div className={styles.row}>
-          <input onKeyDown={onKeyDown} className={styles.search} placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} />
-          <button type="button" className={styles.submit} onClick={search}>Submit</button>
-        </div>
+        {isAuthenticated && (
+          <div className={styles.row}>
+            <input onKeyDown={onKeyDown} className={styles.search} placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} />
+            <button type="button" className={styles.submit} onClick={search}>Submit</button>
+          </div>
+        )}
       </div>
     </>
   );

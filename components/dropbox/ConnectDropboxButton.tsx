@@ -1,19 +1,10 @@
 import Image from 'next/image';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { signIn, signOut } from 'next-auth/react';
 import styles from './styles.module.scss';
+import { useIsAuthenticated } from '../../lib/hooks';
 
 const ConnectDropboxButton = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    if (status === 'authenticated' || session) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, [session, status]);
+  const isAuthenticated = useIsAuthenticated();
 
   if (isAuthenticated) {
     return (
