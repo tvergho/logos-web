@@ -25,7 +25,7 @@ export const generateStyledParagraph = (card: Card, i: number, paragraph: string
 
   const obj: Record<string, string> = {};
   for (const [_, s, e] of highlights) {
-    obj[s] = `${obj[s] || ''}<span style="background:${highlightColor};">`;
+    obj[s] = `${obj[s] || ''}<span style="background:${highlightColor};mso-highlight:${highlightColor}">`;
     obj[e] = `${obj[e] || ''}</span>`;
   }
   for (const [_, s, e] of emphases) {

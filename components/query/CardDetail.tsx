@@ -15,6 +15,8 @@ type CardProps = {
   downloadUrls?: string[];
 }
 
+const LINE_HEIGHT = '107%';
+
 const CardDetail = ({ card, downloadUrls }: CardProps) => {
   const styledCite = generateStyledCite(card?.cite, card?.cite_emphasis);
   const container = useRef<HTMLDivElement>(null);
@@ -43,7 +45,7 @@ const CardDetail = ({ card, downloadUrls }: CardProps) => {
           <div ref={container}>
             <div className={styles['copy-container']}>
               <h4 style={{
-                fontSize: '13pt', marginTop: 2, marginBottom: 0, lineHeight: '15.6933px',
+                fontSize: '13pt', marginTop: 2, marginBottom: 0, lineHeight: LINE_HEIGHT,
               }}
               >{card.tag}
               </h4>
@@ -56,12 +58,12 @@ const CardDetail = ({ card, downloadUrls }: CardProps) => {
             </div>
 
             {!!card.tag_sub && (
-              <p className="MsoNormal" style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }}>{card.tag_sub}</p>
+              <p className="MsoNormal" style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: LINE_HEIGHT }}>{card.tag_sub}</p>
             )}
 
             <p className="MsoNormal"
               style={{
-                fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: '15.6933px',
+                fontSize: '11pt', marginTop: 0, marginBottom: 8, lineHeight: LINE_HEIGHT,
               }}
               dangerouslySetInnerHTML={{ __html: styledCite || '' }}
             />
@@ -71,7 +73,7 @@ const CardDetail = ({ card, downloadUrls }: CardProps) => {
 
               return (
                 <p className="MsoNormal"
-                  style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: '15.6933px' }}
+                  style={{ fontSize: '11pt', margin: '0in 0in 8pt', lineHeight: LINE_HEIGHT }}
                   key={i}
                   dangerouslySetInnerHTML={{ __html: styledParagraph }}
                 />
