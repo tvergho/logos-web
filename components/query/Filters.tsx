@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
@@ -24,10 +25,11 @@ type FiltersProps = {
   onYearSelect: (selected: YearOption[]) => void,
   onSchoolSelect: (selected: SchoolOption[]) => void,
   schools: SchoolOption[],
+  togglePersonal: () => void
 }
 
 const Filters = ({
-  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, schools, resetSchools,
+  selectionRange, handleSelect, resetDate, onSideSelect, urlValues, onDivisionSelect, onYearSelect, onSchoolSelect, schools, resetSchools, togglePersonal,
 }: FiltersProps) => {
   const [isFiltersShown, setIsFiltersShown] = useState(false);
   const { width } = useWindowSize();
@@ -80,7 +82,7 @@ const Filters = ({
     <>
       <button type="button" className={styles['filter-prompt']} onClick={() => setIsFiltersShown((i) => !i)}>toggle filters</button>
       <motion.div className={styles.filters} animate={{ height: isFiltersShown ? (width > 1200 ? 130 : (width < 600 ? 350 : 200)) : 0, overflow: isFiltersShown ? 'visible' : 'hidden' }}>
-        <div className={styles.filter}>
+        {/* <div className={styles.filter}>
           <h6>SIDE</h6>
           <Multiselect
             options={sideOptions}
@@ -93,19 +95,21 @@ const Filters = ({
             onSelect={onSideSelect}
             onRemove={onSideSelect}
           />
-        </div>
+  </div> */}
         <div className={styles.filter}>
           <h6>DIVISION</h6>
           <Multiselect
             options={divisionOptions}
             displayValue="name"
             selectedValues={urlValues.division || [divisionOptions[0], divisionOptions[1]]}
-            style={{ multiselectContainer: { width: 250 }, inputField: { width: 50 }, chips: { background: 'rgb(0, 105, 62)' } }}
+            style={{ multiselectContainer: { width: 200 }, inputField: { width: 50, height: 28 }, chips: { display: 'none' } }}
             hidePlaceholder
             emptyRecordMsg=""
             placeholder=""
             onSelect={onDivisionSelect}
             onRemove={onDivisionSelect}
+            showCheckbox
+            showArrow
           />
         </div>
         <div className={styles.filter}>
@@ -143,7 +147,7 @@ const Filters = ({
             showArrow
           />
         </div>
-        <div className={`${styles.filter} ${styles['range-container']}`}>
+        {/* <div className={`${styles.filter} ${styles['range-container']}`}>
           <div className={styles['filter-row']}>
             <h6 className={styles.range}>DATE</h6>
             <button type="button" onClick={resetDate} className={styles.clear}>clear</button>
@@ -155,6 +159,11 @@ const Filters = ({
             inputRanges={[]}
             editableDateInputs
           />
+  </div> */}
+
+        <div className={styles.personal}>
+          <label htmlFor="personal_only">Show personal cards only</label>
+          <input type="checkbox" id="personal_only" name="personal_only" onClick={togglePersonal} />
         </div>
       </motion.div>
     </>

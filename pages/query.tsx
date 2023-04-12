@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import mixpanel from 'mixpanel-browser';
+import { useSession } from 'next-auth/react';
 import StyleSelect from '../components/StyleSelect';
 import {
   InputBox, SearchResults, CardDetail, Filters,
@@ -28,9 +29,10 @@ const QueryPage = () => {
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match, personal_only,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
+  const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
 
   // set the initial value of the filters based on the URL
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
@@ -43,6 +45,8 @@ const QueryPage = () => {
     endDate: new Date(),
     key: 'selection',
   });
+
+  const { data: session, status } = useSession();
 
   /**
    * Load the list of schools from the API on page load.
@@ -74,6 +78,7 @@ const QueryPage = () => {
       ...(params.exclude_years || exclude_years) && { exclude_years: params.exclude_years ? params.exclude_years : exclude_years as string },
       ...(params.exclude_schools || exclude_schools) && { exclude_schools: params.exclude_schools ? params.exclude_schools : exclude_schools as string },
       ...(params.cite_match || cite_match) && { cite_match: params.cite_match ? params.cite_match : cite_match as string },
+      ...(params.personal_only || personal_only) && { personal_only: params.personal_only ? params.personal_only : personal_only as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -154,18 +159,21 @@ const QueryPage = () => {
       ...(exclude_years) && { exclude_years },
       ...(exclude_schools) && { exclude_schools },
       ...(cite_match) && { cite_match },
+      ...(personal_only) && { personal_only },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
       setLoading(true);
       apiService.search(query, c, {
-        ...(start_date) && { start_date },
-        ...(end_date) && { end_date },
+        ...(start_date) && { start_date: Math.floor(new Date(start_date as string).getTime() / 1000) },
+        ...(end_date) && { end_date: Math.floor(new Date(end_date as string).getTime() / 1000) },
         ...(exclude_sides) && { exclude_sides },
         ...(exclude_division) && { exclude_division },
         ...(exclude_years) && { exclude_years },
         ...(exclude_schools) && { exclude_schools },
         ...(cite_match) && { cite_match },
+        ...(personal_only) && { personal_only },
+        ...!!(session && session.accessToken) && { access_token: session.accessToken },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
 
@@ -189,7 +197,7 @@ const QueryPage = () => {
   // triggered for any changes in the URL
   useEffect(() => {
     // initiates a new search if the query exists
-    if ((urlSearch && urlSearch.length > 0) || cite_match) {
+    if (status !== 'loading' && ((urlSearch && urlSearch.length > 0) || cite_match)) {
       setQuery(decodeURI(urlSearch as string || ''));
       searchRequest(decodeURI(urlSearch as string || ''), 0, true);
     }
@@ -213,7 +221,7 @@ const QueryPage = () => {
         };
       });
     }
-  }, [routerQuery]);
+  }, [routerQuery, status]);
 
   const getCard = async (id: string) => {
     if (!cards[id]) {
@@ -268,6 +276,14 @@ const QueryPage = () => {
     }
   };
 
+  const togglePersonal = () => {
+    if (personal_only === 'true') {
+      updateUrl({ }, ['personal_only']);
+    } else {
+      updateUrl({ personal_only: 'true' });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -303,6 +319,7 @@ const QueryPage = () => {
             onSchoolSelect={onSchoolSelect}
             schools={schools}
             resetSchools={resetSchools}
+            togglePersonal={togglePersonal}
           />
         </div>
 
@@ -313,8 +330,9 @@ const QueryPage = () => {
             cards={cards}
             getCard={getCard}
             loadMore={loadMore}
+            setDownloadUrls={setDownloadUrls}
           />
-          <CardDetail card={cards[selectedCard]} />
+          <CardDetail card={cards[selectedCard]} downloadUrls={downloadUrls} />
         </div>
       </div>
     </>

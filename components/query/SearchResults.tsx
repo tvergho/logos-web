@@ -21,10 +21,11 @@ type SearchResultsProps = {
   cards: Record<string, any>;
   getCard: (id: string) => Promise<void>;
   loadMore: () => Promise<any>;
+  setDownloadUrls: (urls: string[]) => void;
 };
 
 const SearchResults = ({
-  results, setSelected, cards, getCard, loadMore,
+  results, setSelected, cards, getCard, loadMore, setDownloadUrls,
 }: SearchResultsProps) => {
   const { width } = useWindowSize();
   const cache = useRef(new CellMeasurerCache({
@@ -36,15 +37,24 @@ const SearchResults = ({
   const [requested, setRequested] = useState<Record<string, any>>({});
 
   // filter the list by string similarity to avoid showing duplicate cards
-  // successive cards with a combined tag + cite similarity of 0.8 or greater compared with any other previous card
+  // successive cards with a combined tag + cite similarity of 0.95 or greater compared with any other previous card
   // will not be shown in the final set of search results
   const filteredResults = useMemo<Array<SearchResult>>(() => {
     return results.reduce<Array<SearchResult>>((acc, result) => {
-      const hasSimilarMatch = !!acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.95; });
-      if (!hasSimilarMatch) {
+      const similarMatch: SearchResult | undefined = acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.95; });
+
+      if (!similarMatch) {
         return [...acc, result];
+      } else {
+        // Append the download_url as an array to the existing result
+        const newResult = { ...similarMatch };
+        if (Array.isArray(newResult.download_url)) {
+          newResult.download_url.push(result.download_url as string);
+        } else {
+          newResult.download_url = [newResult.download_url as string, result.download_url as string];
+        }
+        return [...acc.filter((r) => r.id !== similarMatch.id), newResult];
       }
-      return acc;
     }, []);
   }, [results]);
 
@@ -57,7 +67,7 @@ const SearchResults = ({
   useEffect(() => {
     loader.current?.resetLoadMoreRowsCache();
     cache.current.clearAll();
-  }, [results[0], width]);
+  }, [results[0], width, filteredResults]);
 
   const rowRenderer: ListRowRenderer = ({
     index, parent, key, style,
@@ -76,6 +86,13 @@ const SearchResults = ({
 
     const card = cards[result.id];
 
+    const onClick = () => {
+      setSelected(result.id);
+      if (result.download_url) {
+        setDownloadUrls(Array.isArray(result.download_url) ? result.download_url : [result.download_url]);
+      }
+    };
+
     return (
       <CellMeasurer
         key={key}
@@ -84,7 +101,7 @@ const SearchResults = ({
         columnIndex={0}
         rowIndex={index}
       >
-        <div key={result.id} className={styles.result} role="button" tabIndex={0} onClick={() => setSelected(result.id)} style={style}>
+        <div key={result.id} className={styles.result} role="button" tabIndex={0} onClick={onClick} style={style}>
           <div className={styles.tag}>{/\d/.test(result.cite) ? result.tag : `${result.tag} ${result.cite}`}</div>
           <div className={styles.cite}
             dangerouslySetInnerHTML={{
@@ -92,7 +109,7 @@ const SearchResults = ({
                 : (card ? card.body.find((p: string) => /\d/.test(p)) : '')),
             }}
           />
-          <DownloadLink url={result.s3_url || result.download_url} />
+          <DownloadLink url={result.download_url} />
         </div>
       </CellMeasurer>
     );
