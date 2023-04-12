@@ -16,7 +16,6 @@ import { SearchResult } from '../lib/types';
 import {
   SideOption, sideOptions, divisionOptions, DivisionOption, yearOptions, YearOption, SchoolOption,
 } from '../lib/constants';
-import { useIsAuthenticated } from '../lib/hooks';
 
 const QueryPage = () => {
   const [query, setQuery] = useState(''); // current user input in the search box
@@ -34,8 +33,6 @@ const QueryPage = () => {
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
   const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
-
-  const isAuthenticated = useIsAuthenticated();
 
   // set the initial value of the filters based on the URL
   const urlSelectedSides = sideOptions.filter((side) => { return !exclude_sides?.includes(side.name); });
@@ -200,7 +197,7 @@ const QueryPage = () => {
   // triggered for any changes in the URL
   useEffect(() => {
     // initiates a new search if the query exists
-    if (status !== 'loading' && ((urlSearch && urlSearch.length > 0) || cite_match) && isAuthenticated) {
+    if (status !== 'loading' && ((urlSearch && urlSearch.length > 0) || cite_match)) {
       setQuery(decodeURI(urlSearch as string || ''));
       searchRequest(decodeURI(urlSearch as string || ''), 0, true);
     }
@@ -224,7 +221,7 @@ const QueryPage = () => {
         };
       });
     }
-  }, [routerQuery, status, isAuthenticated]);
+  }, [routerQuery, status]);
 
   const getCard = async (id: string) => {
     if (!cards[id]) {
