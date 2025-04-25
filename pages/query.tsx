@@ -29,7 +29,7 @@ const QueryPage = () => {
   const router = useRouter();
   const { query: routerQuery } = router;
   const {
-    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match, personal_only,
+    search: urlSearch, start_date, end_date, exclude_sides, exclude_division, exclude_years, exclude_schools, cite_match, use_personal,
   } = routerQuery;
   const [lastQuery, setLastQuery] = useState({});
   const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
@@ -78,7 +78,7 @@ const QueryPage = () => {
       ...(params.exclude_years || exclude_years) && { exclude_years: params.exclude_years ? params.exclude_years : exclude_years as string },
       ...(params.exclude_schools || exclude_schools) && { exclude_schools: params.exclude_schools ? params.exclude_schools : exclude_schools as string },
       ...(params.cite_match || cite_match) && { cite_match: params.cite_match ? params.cite_match : cite_match as string },
-      ...(params.personal_only || personal_only) && { personal_only: params.personal_only ? params.personal_only : personal_only as string },
+      ...(params.use_personal || use_personal) && { use_personal: params.use_personal ? params.use_personal : use_personal as string },
     };
     for (const key of reset || []) {
       delete query[key];
@@ -159,7 +159,7 @@ const QueryPage = () => {
       ...(exclude_years) && { exclude_years },
       ...(exclude_schools) && { exclude_schools },
       ...(cite_match) && { cite_match },
-      ...(personal_only) && { personal_only },
+      ...(use_personal) && { use_personal },
     };
 
     if (!loading || JSON.stringify(q) !== JSON.stringify(lastQuery)) {
@@ -172,7 +172,7 @@ const QueryPage = () => {
         ...(exclude_years) && { exclude_years },
         ...(exclude_schools) && { exclude_schools },
         ...(cite_match) && { cite_match },
-        ...(personal_only) && { personal_only },
+        ...(use_personal) && { use_personal },
         ...!!(session && session.accessToken) && { access_token: session.accessToken },
       }).then((response) => {
         const { results: responseResults, cursor } = response;
@@ -277,10 +277,10 @@ const QueryPage = () => {
   };
 
   const togglePersonal = () => {
-    if (personal_only === 'true') {
-      updateUrl({ }, ['personal_only']);
+    if (use_personal === 'true') {
+      updateUrl({ }, ['use_personal']);
     } else {
-      updateUrl({ personal_only: 'true' });
+      updateUrl({ use_personal: 'true' });
     }
   };
 
