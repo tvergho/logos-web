@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://logos-web.onrender.com';
+const apiUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5001' : 'https://logos-web.onrender.com';
 
 export const search = async (query: string, cursor = 0, additionalParams = {}) => {
   let url = `${apiUrl}/query?search=${query}&cursor=${cursor}`;
