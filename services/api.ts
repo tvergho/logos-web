@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const oldUrl = 'https://logos-web.onrender.com';
-const newUrl = 'http://kwkk4ogcc8owoc8oksgsc8w4.95.216.209.197.sslip.io:5001';
-const apiUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5001' : oldUrl;
+const newUrl = 'https://logos-debate.duckdns.org/';
+const apiUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5001' : newUrl;
 
 export const search = async (query: string, cursor = 0, additionalParams = {}) => {
   let url = `${apiUrl}/query?search=${query}&cursor=${cursor}`;
