@@ -41,20 +41,37 @@ const SearchResults = ({
   // will not be shown in the final set of search results
   const filteredResults = useMemo<Array<SearchResult>>(() => {
     return results.reduce<Array<SearchResult>>((acc, result) => {
-      const similarMatch: SearchResult | undefined = acc.find((r) => { return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.95; });
+      const existingIndex = acc.findIndex((r) => {
+        return stringSimilarity.compareTwoStrings(`${r.tag} ${r.cite}`, `${result.tag} ${result.cite}`) > 0.95;
+      });
 
-      if (!similarMatch) {
+      if (existingIndex === -1) {
         return [...acc, result];
-      } else {
-        // Append the download_url as an array to the existing result
-        const newResult = { ...similarMatch };
-        if (Array.isArray(newResult.download_url)) {
-          newResult.download_url.push(result.download_url as string);
-        } else {
-          newResult.download_url = [newResult.download_url as string, result.download_url as string];
-        }
-        return [...acc.filter((r) => r.id !== similarMatch.id), newResult];
       }
+
+      const existingResult = acc[existingIndex];
+      const updatedResult: SearchResult = { ...existingResult };
+
+      const existingUrls = Array.isArray(updatedResult.download_url)
+        ? [...updatedResult.download_url]
+        : updatedResult.download_url ? [updatedResult.download_url] : [];
+
+      const incomingUrl = Array.isArray(result.download_url)
+        ? result.download_url
+        : result.download_url ? [result.download_url] : [];
+
+      const mergedUrls = [...existingUrls];
+      incomingUrl.forEach((url) => {
+        if (!mergedUrls.includes(url)) {
+          mergedUrls.push(url);
+        }
+      });
+
+      updatedResult.download_url = mergedUrls.length === 1 ? mergedUrls[0] : mergedUrls;
+
+      const next = [...acc];
+      next[existingIndex] = updatedResult;
+      return next;
     }, []);
   }, [results]);
 
