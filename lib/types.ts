@@ -16,7 +16,6 @@ export type Card = {
   division?: string;
   s3_url?: string;
   year?: string;
-  formatting?: { version: 2; paragraphs: Array<{ text: string; runs: Array<{ text: string; underline: boolean; bold: boolean; highlight: string | null }> }> };
   body: [string],
   emphasis: [[number, number, number]],
   highlights: [[number, number, number]],

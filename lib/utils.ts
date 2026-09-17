@@ -19,58 +19,41 @@ export const generateStyledCite = (cite?: string, cite_emphasis: Array<[number, 
 };
 
 export const generateStyledParagraph = (card: Card, i: number, paragraph: string, highlightColor = 'yellow') => {
-  if (card.formatting?.version === 2) {
-    const source = card.formatting.paragraphs[i];
-    const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-    // Never interpret source text as markup or infer underline from bold/emphasis.
-    if (!source || source.text !== paragraph || source.runs.map((r) => r.text).join('') !== paragraph) {
-      return `<span style="white-space:pre-wrap">${escape(paragraph)}</span>`;
-    }
-    const colors: Record<string, string> = {
-      black: '#000000',
-      blue: '#0000ff',
-      cyan: '#00ffff',
-      green: '#00ff00',
-      magenta: '#ff00ff',
-      red: '#ff0000',
-      yellow: '#ffff00',
-      white: '#ffffff',
-      darkBlue: '#000080',
-      darkCyan: '#008080',
-      darkGreen: '#008000',
-      darkMagenta: '#800080',
-      darkRed: '#800000',
-      darkYellow: '#808000',
-      darkGray: '#808080',
-      lightGray: '#c0c0c0',
-    };
-    return `<span style="white-space:pre-wrap">${source.runs.map((run) => {
-      const style = [run.underline ? 'text-decoration:underline' : '', run.bold ? 'font-weight:bold' : '',
-        run.highlight && colors[run.highlight] ? `background-color:${['yellow', 'lime', 'aqua'].includes(highlightColor) ? highlightColor : colors[run.highlight]}` : ''].filter(Boolean).join(';');
-      return `<span style="${style}">${escape(run.text)}</span>`;
-    }).join('')}</span>`;
-  }
-  const highlights = card.highlights.filter((h) => h[0] === i + 2);
-  const underlines = card.underlines.filter((u) => u[0] === i + 2);
-  const emphases = card.emphasis.filter((u) => u[0] === i + 2);
-
-  const obj: Record<string, string> = {};
-  for (const [_, s, e] of highlights) {
-    obj[s] = `${obj[s] || ''}<span style="background:${highlightColor};mso-highlight:${highlightColor}">`;
-    obj[e] = `${obj[e] || ''}</span>`;
-  }
-  for (const [_, s, e] of emphases) {
-    obj[s] = `${obj[s] || ''}<b><u>`;
-    obj[e] = `${obj[e] || ''}</u></b>`;
-  }
-  for (const [_, s, e] of underlines) {
-    obj[s] = `${obj[s] || ''}<u>`;
-    obj[e] = `${obj[e] || ''}</u>`;
-  }
-
-  const styledParagraph = paragraph.replace(/(?:)/g, (_, index) => obj[index] || '');
-  return styledParagraph;
+  const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+  const color = ['yellow', 'lime', 'aqua'].includes(highlightColor) ? highlightColor : 'yellow';
+  // Sweep span boundaries to render disjoint segments, including crossing spans.
+  // Counts handle overlapping spans of the same kind without switching off early.
+  const events = new Map<number, number[]>();
+  const event = (position: number) => {
+    const existing = events.get(position);
+    if (existing) return existing;
+    const deltas = [0, 0, 0];
+    events.set(position, deltas);
+    return deltas;
+  };
+  event(0);
+  event(paragraph.length);
+  [card.highlights, card.underlines, card.emphasis].forEach((spans, kind) => {
+    (spans || []).forEach(([line, start, end]) => {
+      if (line !== i + 2 || !Number.isInteger(start) || !Number.isInteger(end)
+        || start < 0 || end > paragraph.length || start >= end) return;
+      event(start)[kind] += 1;
+      event(end)[kind] -= 1;
+    });
+  });
+  const positions = Array.from(events.keys()).sort((a, b) => a - b);
+  const active = [0, 0, 0];
+  const segments: string[] = [];
+  positions.slice(0, -1).forEach((start, index) => {
+    event(start).forEach((delta, kind) => { active[kind] += delta; });
+    const style = [active[0] > 0 ? `background-color:${color}` : '',
+      active[1] > 0 ? 'text-decoration:underline' : '',
+      active[2] > 0 ? 'font-weight:bold' : ''].filter(Boolean).join(';');
+    const text = escape(paragraph.slice(start, positions[index + 1]));
+    segments.push(style ? `<span style="${style}">${text}</span>` : text);
+  });
+  return `<span style="white-space:pre-wrap">${segments.join('')}</span>`;
 };
 
 export const getRedirectUriFromHeaders = (headers: IncomingHttpHeaders) => {
